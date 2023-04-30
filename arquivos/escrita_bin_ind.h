@@ -6,6 +6,6 @@
     #include "../extras/utils.h"
     #include "leitura_bin.h"
 
-    void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros, int* num_ind);
+    void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros);
 
 #endif
