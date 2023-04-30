@@ -22,7 +22,8 @@ void le_dado_str(FILE* arq_indices, dados_str_t** dado_str) {
     *dado_str = cria_dados_str(chaveBusca, byteOffset);
 }
 
-void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_int, dados_str_t*** dados_str, cabecalho_indice_t** cabecalho_indice) {
+void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_int, dados_str_t*** dados_str, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
+    *num_ind = 0;
     if (arq_indices == NULL) return;
 
     le_cabecalho_indice(arq_indices, cabecalho_indice);
@@ -35,6 +36,7 @@ void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_in
 
     int num_dados = 0;
     while (feof(arq_indices) == 0) {
+        (*num_ind)++;
         switch (tipo_campo[0]) {
             case 'i':
                 dados_int_t** dados_int_realloc = (dados_int_t**) realloc(*dados_int, (++num_dados)*sizeof(dados_int_t*));
