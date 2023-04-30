@@ -24,4 +24,6 @@
     // pela variável nome_arq_ind
     void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_ind);
 
+    void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas);
+
 #endif

@@ -11,6 +11,7 @@ campo_busca_t* le_campo_busca() {
     } else {
         scan_quote_string(campo_atual->chaveBuscaStr);
     }
+    return campo_atual;
 }
 
 campo_busca_t** le_campos_busca(int num_campos) {
@@ -58,6 +59,7 @@ int satisfaz_campo(crime_t* crime_atual, campo_busca_t* campo_atual) {
 
         return strcmp(string_a_se_comparar, campo_atual->chaveBuscaStr) == 0;
     }
+    return -1;
 }
 
 int satisfaz_query(crime_t* crime_atual, campo_busca_t** query_atual, int n_campos) {

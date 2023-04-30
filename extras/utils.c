@@ -1,4 +1,7 @@
 #include "utils.h"
+#include<string.h>
+#include <ctype.h>
+
 
 // Função fornecida
 // Alterei para pegar como entrada o próprio ponteiro para arquivo

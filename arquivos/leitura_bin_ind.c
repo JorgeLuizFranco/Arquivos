@@ -38,7 +38,7 @@ void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_in
     while (feof(arq_indices) == 0) {
         (*num_ind)++;
         switch (tipo_campo[0]) {
-            case 'i':
+            case 'i':{
                 dados_int_t** dados_int_realloc = (dados_int_t**) realloc(*dados_int, (++num_dados)*sizeof(dados_int_t*));
                 if (dados_int_realloc == NULL) {
                     free(*cabecalho_indice);
@@ -55,8 +55,9 @@ void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_in
                     libera_vetor_ate_pos((void**)(*dados_int), num_dados-1);
                 }
                 break;
-            case 's':
-                dados_str_t* dados_str_realloc = (dados_str_t**) realloc(*dados_str, (++num_dados) * sizeof(dados_str_t*));
+            }
+            case 's':{
+                dados_str_t** dados_str_realloc = (dados_str_t**) realloc(*dados_str, (++num_dados) * sizeof(dados_str_t*));
                 if (dados_str_realloc == NULL) {
                     free(*cabecalho_indice);
                     *cabecalho_indice = NULL;
@@ -71,6 +72,7 @@ void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_in
                     libera_vetor_ate_pos((void**)(*dados_str), num_dados-1);
                 }
                 break;
+            }
         }
     }
 }

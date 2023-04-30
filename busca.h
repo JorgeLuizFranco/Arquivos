@@ -1,7 +1,7 @@
 #ifndef BUSCA_H
     #define BUSCA_H
 
-    #include "utils.h"
+    #include "extras/utils.h"
     #include "registros.h"
     #include <string.h>
 
