@@ -2,7 +2,7 @@
     #define REGISTROS_H
 
     #include <stdlib.h>
-    #include <string.h> //blablabla
+    #include <string.h>
 
     // Documentação em detalhes no .c, que também possui outras funções
     // que servem de base para as colocadas aqui

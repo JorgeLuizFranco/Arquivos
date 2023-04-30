@@ -2,6 +2,7 @@
     #define BUSCA_H
 
     #include "utils.h"
+    #include "registros.h"
     #include <string.h>
 
     typedef struct Campo_busca campo_busca_t;
@@ -12,5 +13,6 @@
     };
 
     campo_busca_t** le_campos_busca(int num_campos);
+    int satisfaz_query(crime_t* crime_atual, campo_busca_t** query_atual, int n_campos);
 
 #endif 
