@@ -77,3 +77,54 @@ int satisfaz_query(crime_t* crime_atual, campo_busca_t** query_atual, int n_camp
 
     return resposta;
 }
+
+void busca_bin_campos(void** ind_int, int num_regs, void** low_reg, void** high_reg, void* chaveBusca) {
+    // quero que *low aponte pro menor para e *high aponte para o maior cara que satisfaçam a busca
+    *low_reg = NULL;
+    *high_reg = NULL;
+
+    int low = 0, high = num_regs - 1;
+    int mid;
+
+    void* reg_mid;
+
+    while (low <= high) {
+
+        mid = (low + high) / 2;
+        
+        reg_mid = ind_int[mid];
+
+        if (compara_chave_busca(reg_mid, chaveBusca, 1)) {
+            if (mid > 0 && compara_chave_busca(ind_int[mid-1], chaveBusca, 1)) {
+                high = mid - 1;
+            } else {
+                break;
+            }
+        } else {
+            low = mid + 1;
+        }
+    }
+
+    if (compara_chave_busca(reg_mid, chaveBusca, 0)) return;
+    *low_reg = reg_mid;
+
+    low = 0, high = num_regs - 1;
+
+    while (low <= high) {
+        mid = (low + high) / 2;
+
+        reg_mid = ind_int[mid];
+
+        if (compara_chave_busca(reg_mid, chaveBusca, -1)) {
+            if (mid + 1 < num_regs && compara_chave_busca(ind_int[mid+1], chaveBusca, -1)) {
+                low = mid + 1;
+            } else {
+                break;
+            }
+        } else {
+            high = mid - 1;
+        }
+    }
+
+    *high_reg = reg_mid;
+}

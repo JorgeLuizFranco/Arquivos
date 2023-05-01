@@ -6,7 +6,7 @@
 
     // Função fornecida
     // Alterei para pegar como entrada o próprio ponteiro para arquivo
-    void binarioNaTela(FILE* fs);
+    void binarioNaTela(char *nomeArquivoBinario);
 
     void scan_quote_string(char *str);
 

@@ -51,10 +51,10 @@ escrita_tela.o: io/escrita_tela.c io/escrita_tela.h leitura_bin.o utils.o
 indices.o: indices.h indices.c utils.o
 	$(CC) -c $(CFLAGS) indices.c -o indices.o
 
-registros.o: registros.c registros.h
+registros.o: registros.c registros.h 
 	$(CC) -c $(CFLAGS) registros.c -o registros.o
 
-busca.o: busca.c busca.h registros.o utils.o  
+busca.o: busca.c busca.h registros.o utils.o indices.o
 	$(CC) -c $(CFLAGS) busca.c -o busca.o
 
 funcionalidades.o: funcionalidades.h funcionalidades.c escrita_tela.o escrita_bin.o leitura_bin.o leitura_csv.o escrita_bin_ind.o  leitura_bin_ind.o busca.o

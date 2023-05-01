@@ -4,8 +4,7 @@
 
 
 // Função fornecida
-// Alterei para pegar como entrada o próprio ponteiro para arquivo
-void binarioNaTela(FILE* fs) {
+void binarioNaTela(char *nomeArquivoBinario) {
     /*
      * Você não precisa entender o código dessa função.
      *
@@ -18,6 +17,15 @@ void binarioNaTela(FILE* fs) {
     unsigned long i, cs;
     unsigned char *mb;
     size_t fl;
+    FILE *fs;
+    if (nomeArquivoBinario == NULL || !(fs = fopen(nomeArquivoBinario, "rb"))) {
+        fprintf(stderr,
+                "ERRO AO ESCREVER O BINARIO NA TELA (função binarioNaTela): "
+                "não foi possível abrir o arquivo que me passou para leitura. "
+                "Ele existe e você tá passando o nome certo? Você lembrou de "
+                "fechar ele com fclose depois de usar?\n");
+        return;
+    }
     fseek(fs, 0, SEEK_END);
     fl = ftell(fs);
     fseek(fs, 0, SEEK_SET);
@@ -30,6 +38,7 @@ void binarioNaTela(FILE* fs) {
     }
     printf("%lf\n", (cs / (double)100));
     free(mb);
+    fclose(fs);
 }
 
 

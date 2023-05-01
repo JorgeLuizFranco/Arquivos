@@ -50,3 +50,32 @@ void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor) {
     qsort(vetor_dados_str, tamanho_vetor, sizeof(dados_str_t*), compara_dados_str);
 }
 
+int pega_tipo_dado(void* dado) {
+    if (sizeof(dado) == sizeof(dados_int_t)) {
+        return 0;
+    } else {
+        return 1;
+    }
+}
+
+int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, void* /* char* ou int* */ generico_dir, int flag_modo) {
+    if (pega_tipo_dado(generico_esq) == 0) {
+        if (flag_modo == 1) {
+            return ((dados_int_t*)generico_esq)->chaveBusca >= *((int*)generico_dir);
+        } else if (flag_modo == -1) {
+            return ((dados_int_t*)generico_esq)->chaveBusca <= *((int*)generico_dir);
+        } else {
+            return ((dados_int_t*)generico_esq)->chaveBusca == *((int*)generico_dir);
+        }
+    } else {
+        if (flag_modo == 1) {
+            return strcmp(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir) >= 0;
+        } else if (flag_modo == -1) {
+            return strcmp(((dados_str_t*)generico_dir)->chaveBusca, (char*)generico_dir) <= 0;
+        } else {
+            return strcmp(((dados_str_t*)generico_dir)->chaveBusca, (char*)generico_dir) == 0;
+        }
+    }
+}
+
+

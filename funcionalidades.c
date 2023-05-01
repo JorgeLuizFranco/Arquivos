@@ -69,8 +69,8 @@ void csv_para_bin(char* nome_arq_csv, char* nome_arq_bin) {
 
     free(cabecalho); // libera o cabeçalho
 
-    binarioNaTela(arq_bin); // função pedida pra ser executada
     fclose(arq_bin); // fecha o binário
+    binarioNaTela(nome_arq_bin); // função pedida pra ser executada
 }
 
 /**
@@ -138,8 +138,8 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     escreve_arq_ind(arq_bin, arq_ind, nome_campo, tipo_campo, n_registros);
 
     fclose(arq_bin);
-    binarioNaTela(arq_ind);
     fclose(arq_ind);
+    binarioNaTela(nome_arq_ind);
 }
 
 void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
@@ -182,9 +182,11 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
         // sera que tem o campo do arquivo de indice?
         int flag_campo_procurado = 0;
+        campo_busca_t* campo_ind = NULL;
         for (int j = 0; j < num_campos; j++) {
             if (strcmp(campos[j]->campo_busca, nome_campo) == 0) {
                 flag_campo_procurado = 1;
+                campo_ind = campos[j];
                 break;
             }
         }
@@ -205,7 +207,6 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                     free(cabecalho);
                     fclose(arq_bin);
                     libera_vetor_ate_pos((void**)campos, num_campos-1);
-
                     return;
                 }
 
@@ -213,6 +214,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                     mostra_crime_tela(crime_atual);
                 }
 
+                byteOffset += tamanho_crime(crime_atual);
                 libera_crime(crime_atual);
             }
         } else {
@@ -220,6 +222,41 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             // se tiver (e existir), ver todos os caras com o indice que quero no arquivo de indices com busca binaria
             // percorrer esses caras, e pra cada um deles eu vou pra cada byteoffset do arquivo que to lendo e vejo se obedece
             // os outros requisitos
+
+            void* low;
+            void* high;
+            void** indices = dados_int == NULL ? (void**) dados_str : (void**) dados_int;
+            void* chaveBusca = dados_int == NULL ? (void*) campo_ind->chaveBuscaStr : (void*) (&(campo_ind->chaveBuscaInt));
+
+            busca_bin_campos(indices, num_indices, &low, &high, chaveBusca);
+
+            while (low != high+1) {
+                
+                if (dados_int != NULL) {
+                    dados_int_t* dado_atual = (dados_int_t*) low;
+                    crime_atual = le_crime_bin_offset(arq_bin, dado_atual->byteOffset);
+                } else {
+                    dados_str_t* dado_atual = (dados_str_t*) low;
+                    crime_atual = le_crime_bin_offset(arq_bin, dado_atual->byteOffset);
+                }
+
+                if (crime_atual == NULL) {
+                    fclose(arq_idx);
+                    free(cabecalho_indice);
+                    if (dados_int != NULL) libera_vetor_ate_pos((void**)dados_int, num_indices-1);
+                    if (dados_str != NULL) libera_vetor_ate_pos((void**)dados_str, num_indices-1);
+                    
+                    free(cabecalho);
+                    fclose(arq_bin);
+                    libera_vetor_ate_pos((void**)campos, num_campos-1);
+                    return;
+                }
+
+                mostra_crime_tela(crime_atual);
+
+                libera_crime(crime_atual);
+                low++;
+            }
         }
 
 
