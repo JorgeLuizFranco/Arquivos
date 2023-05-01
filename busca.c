@@ -36,9 +36,9 @@ int satisfaz_campo(crime_t* crime_atual, campo_busca_t* campo_atual) {
     } else if (strcmp(campo_atual->campo_busca, "numeroArtigo") == 0) {
         return crime_atual->numeroArtigo == campo_atual->chaveBuscaInt;
     } else if (strcmp(campo_atual->campo_busca, "dataCrime") == 0) {
-        return compara_string_limitada(crime_atual->dataCrime, campo_atual->chaveBuscaStr, 10, 0) == 0;
+        return compara_string_limitada(crime_atual->dataCrime, campo_atual->chaveBuscaStr, 10, 1) == 0;
     } else if (strcmp(campo_atual->campo_busca, "marcaCelular") == 0) {
-        return compara_string_limitada(crime_atual->marcaCelular, campo_atual->chaveBuscaStr, 12, 0) == 0;
+        return compara_string_limitada(crime_atual->marcaCelular, campo_atual->chaveBuscaStr, 12, 1) == 0;
     } else {
         char* string_dinamica_original;
         
@@ -86,8 +86,6 @@ void busca_bin_campos(void** ind_int, int num_regs, int* low_reg, int* high_reg,
         mid = (low + high) / 2;
         
         reg_mid = ind_int[mid];
-
-        //fprintf(stderr, "Estou comparando %d com %d (ind %d)\n", ((dados_int_t*)reg_mid)->chaveBusca, *((int*)chaveBusca), mid);
 
         if (compara_chave_busca(reg_mid, chaveBusca, 1, tipo_var)) {
             high = mid - 1;

@@ -217,7 +217,8 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
                 if (satisfaz_query(crime_atual, campos, num_campos)) {
                     mostra_crime_tela(crime_atual);
-                    regs_mostrados++;
+                    if (crime_atual->removido != '1')
+                        regs_mostrados++;
                 }
 
                 byteOffset += tamanho_crime(crime_atual);
@@ -235,7 +236,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             void* chaveBusca = dados_int == NULL ? (void*) campo_ind->chaveBuscaStr : (void*) (&(campo_ind->chaveBuscaInt));
 
             busca_bin_campos(indices, num_indices, &low, &high, chaveBusca, dados_int != NULL ? 0 : 1);
-
+            
             while (low <= high) {
                 
                 if (dados_int != NULL) {
@@ -263,7 +264,8 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
                 if (satisfaz_query(crime_atual, campos, num_campos)) {
                     mostra_crime_tela(crime_atual);
-                    regs_mostrados++;
+                    if (crime_atual->removido != '1')
+                        regs_mostrados++;
                 }
 
                 libera_crime(crime_atual);

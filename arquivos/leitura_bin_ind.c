@@ -11,6 +11,8 @@ void le_cabecalho_indice(FILE* arq_indices, cabecalho_indice_t** cabecalho_indic
 void le_dado_int(FILE* arq_indices, dados_int_t** dado_int) {
     int chaveBusca;
     long long int byteOffset;
+    fread(&chaveBusca, sizeof(int), 1, arq_indices);
+    fread(&byteOffset, sizeof(long long int), 1, arq_indices);
     *dado_int = cria_dados_int(chaveBusca, byteOffset);
 }
 

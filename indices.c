@@ -70,9 +70,9 @@ int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, v
         }
     } else {
         if (flag_modo == 1) {
-            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) >= 0;
-        } else if (flag_modo == -1) {
             return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) <= 0;
+        } else if (flag_modo == -1) {
+            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) >= 0;
         } else {
             return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) == 0;
         }
