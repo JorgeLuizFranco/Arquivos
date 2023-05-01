@@ -41,7 +41,7 @@ int main() {
             
             int num_consultas;
             scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
-            realiza_consultas(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+            procura_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
             break;
         }

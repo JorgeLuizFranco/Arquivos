@@ -9,7 +9,10 @@
     #include "./arquivos/leitura_bin_ind.h"
     #include "./extras/utils.h"
     #include "busca.h"
+    #include "funcoes_anonimas.h"
+
     
+    typedef void (*funcao_anonima_t)(crime_t*, FILE*, long long int);
 
     // Funcionalidade 1. A partir de um nome de arquivo csv e nome de arquivo binário,
     // faz um binário com os registros descritos no csv
@@ -24,6 +27,6 @@
     // pela variável nome_arq_ind
     void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_ind);
 
-    void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas);
+    void procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas);
 
 #endif
