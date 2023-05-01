@@ -71,8 +71,12 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     return crime;
 }
 
-crime_t* le_crime_bin_offset(FILE* arq_bin, long long int byteOffset) {
+void desloca_offset(FILE* arq_bin, long long int byteOffset) {
     long long int posicao = ftell(arq_bin);
     fseek(arq_bin, byteOffset - posicao, SEEK_CUR);
+}
+
+crime_t* le_crime_bin_offset(FILE* arq_bin, long long int byteOffset) {
+    desloca_offset(arq_bin, byteOffset);
     return le_crime_bin(arq_bin);
 }

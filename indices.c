@@ -58,8 +58,8 @@ int pega_tipo_dado(void* dado) {
     }
 }
 
-int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, void* /* char* ou int* */ generico_dir, int flag_modo) {
-    if (pega_tipo_dado(generico_esq) == 0) {
+int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, void* /* char* ou int* */ generico_dir, int flag_modo, int tipo_var) {
+    if (tipo_var == 0) {
         if (flag_modo == 1) {
             return ((dados_int_t*)generico_esq)->chaveBusca >= *((int*)generico_dir);
         } else if (flag_modo == -1) {
@@ -69,11 +69,11 @@ int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, v
         }
     } else {
         if (flag_modo == 1) {
-            return strcmp(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir) >= 0;
+            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) >= 0;
         } else if (flag_modo == -1) {
-            return strcmp(((dados_str_t*)generico_dir)->chaveBusca, (char*)generico_dir) <= 0;
+            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) <= 0;
         } else {
-            return strcmp(((dados_str_t*)generico_dir)->chaveBusca, (char*)generico_dir) == 0;
+            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) == 0;
         }
     }
 }

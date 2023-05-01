@@ -32,6 +32,6 @@
     dados_str_t* cria_dados_str(char* chaveBusca, long long int byteOffset);
 
 
-    int compara_chave_busca(void* generico_esq, void* generico_dir, int flag_modo);
+    int compara_chave_busca(void* generico_esq, void* generico_dir, int flag_modo, int tipo_var);
 
 #endif

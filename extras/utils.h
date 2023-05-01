@@ -16,4 +16,6 @@
     void libera_vetor_ate_pos(void** vetor, int pos);
 
     int checa_existencia_arquivo(char* nome_arquivo);
+
+    int compara_string_limitada(char* s1, char* s2, int tamanho, int flag_s2_dinamica);
 #endif

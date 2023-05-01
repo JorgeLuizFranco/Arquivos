@@ -6,6 +6,7 @@
 
     cabecalho_t* le_cabecalho_bin(FILE* arq_bin);
     crime_t* le_crime_bin(FILE* arq_bin);
+    void desloca_offset(FILE* arq_bin, long long int byteOffset);
     crime_t* le_crime_bin_offset(FILE* arq_bin, long long int byteOffset);
 
 #endif

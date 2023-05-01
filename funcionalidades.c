@@ -173,8 +173,12 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     le_arq_indices(arq_idx, tipo_campo, &dados_int, &dados_str, &cabecalho_indice, &num_indices);
 
     for (int i = 0; i < num_consultas; i++) {
+
+        int regs_mostrados = 0;
+        printf("Resposta para a busca %d\n", i+1);
+
         int num_campos;
-        if (i != 0) fseek(arq_bin, 0, SEEK_SET);
+        if (i != 0) desloca_offset(arq_bin, TAMANHO_CABECALHO);
         scanf("%d", &num_campos);
         campo_busca_t** campos = le_campos_busca(num_campos);
         if (campos == NULL) {
@@ -196,7 +200,6 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
         if (cabecalho_indice == NULL || (cabecalho_indice != NULL && flag_campo_procurado == 0)) {
             long long int byteOffset = TAMANHO_CABECALHO;
-
             while (byteOffset < cabecalho->proxByteOffset) {
                 crime_atual = le_crime_bin(arq_bin);
                 if (crime_atual == NULL) {
@@ -214,6 +217,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
                 if (satisfaz_query(crime_atual, campos, num_campos)) {
                     mostra_crime_tela(crime_atual);
+                    regs_mostrados++;
                 }
 
                 byteOffset += tamanho_crime(crime_atual);
@@ -225,20 +229,23 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             // percorrer esses caras, e pra cada um deles eu vou pra cada byteoffset do arquivo que to lendo e vejo se obedece
             // os outros requisitos
 
-            void* low;
-            void* high;
+            int low;
+            int high;
             void** indices = dados_int == NULL ? (void**) dados_str : (void**) dados_int;
             void* chaveBusca = dados_int == NULL ? (void*) campo_ind->chaveBuscaStr : (void*) (&(campo_ind->chaveBuscaInt));
 
-            busca_bin_campos(indices, num_indices, &low, &high, chaveBusca);
+            busca_bin_campos(indices, num_indices, &low, &high, chaveBusca, dados_int != NULL ? 0 : 1);
 
-            while (low != high+1) {
+            while (low <= high) {
                 
                 if (dados_int != NULL) {
-                    dados_int_t* dado_atual = (dados_int_t*) low;
+                    //fprintf(stderr, "a\n");
+                    dados_int_t* dado_atual = dados_int[low];
+                    //fprintf(stderr, "b %lld\n", dado_atual->byteOffset);
                     crime_atual = le_crime_bin_offset(arq_bin, dado_atual->byteOffset);
+                    //fprintf(stderr, "c\n");
                 } else {
-                    dados_str_t* dado_atual = (dados_str_t*) low;
+                    dados_str_t* dado_atual = dados_str[low];
                     crime_atual = le_crime_bin_offset(arq_bin, dado_atual->byteOffset);
                 }
 
@@ -254,11 +261,18 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                     return;
                 }
 
-                mostra_crime_tela(crime_atual);
+                if (satisfaz_query(crime_atual, campos, num_campos)) {
+                    mostra_crime_tela(crime_atual);
+                    regs_mostrados++;
+                }
 
                 libera_crime(crime_atual);
                 low++;
             }
+        }
+
+        if (regs_mostrados == 0) {
+            printf("Registro inexistente.\n");
         }
 
 

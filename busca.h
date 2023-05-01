@@ -15,6 +15,6 @@
 
     campo_busca_t** le_campos_busca(int num_campos);
     int satisfaz_query(crime_t* crime_atual, campo_busca_t** query_atual, int n_campos);
-    void busca_bin_campos(void** ind_int, int num_regs, void** low_reg, void** high_reg, void* chaveBusca);
+    void busca_bin_campos(void** ind_int, int num_regs, int* low_reg, int* high_reg, void* chaveBusca, int tipo_var);
     
 #endif 
