@@ -5,7 +5,6 @@ void escreve_cabecalho_ind(FILE* arq_indices, cabecalho_indice_t* dados_cabecalh
 }
 
 void escreve_dado_int(FILE* arq_indices, dados_int_t* dado_int) {
-    printf("Escrevendo %d:%lld\n", dado_int->chaveBusca, dado_int->byteOffset);
     fwrite(&(dado_int->chaveBusca), sizeof(int), 1, arq_indices);
     fwrite(&(dado_int->byteOffset), sizeof(long long int), 1, arq_indices);
 }
@@ -67,7 +66,7 @@ dados_str_t* pega_dado_str(crime_t* crime_atual, char* nome_campo, long long int
     return dado_atual;
 }
 
-void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros) {
+void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros, long long int cab_byteOffset) {
 
     int copia_nro_reg = nro_registros;
 
@@ -106,9 +105,10 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     dados_str_t* dado_atual_str;
     crime_t* crime_atual;
 
-    while (nro_registros > 0) {
-        crime_atual = le_crime_bin(arq_bin);
+    int nro_reg_str = 0;
 
+    while (byteOffset < cab_byteOffset) {
+        crime_atual = le_crime_bin(arq_bin);
         if (crime_atual == NULL) {
             // em caso de erro de alocação
             free(cabecalho_ind);
@@ -119,7 +119,6 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
         }
 
         if (crime_atual->removido != '1') { 
-            
             switch (tipo_campo[0]) {
                 case 'i':
                     dado_atual_int = pega_dado_int(crime_atual, nome_campo, byteOffset);
@@ -135,9 +134,15 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
                     if (dado_atual_str == NULL) {
                         libera_crime(crime_atual);
                         free(cabecalho_ind);
-                        libera_vetor_ate_pos((void**)vetor_dados_str, copia_nro_reg - nro_registros - 1);
+                        libera_vetor_ate_pos((void**)vetor_dados_str, nro_reg_str-1);
                     }
-                    vetor_dados_str[copia_nro_reg - nro_registros] = dado_atual_str;
+                    if (dado_atual_str->chaveBusca[0] == '$') {
+                        free(dado_atual_str);
+                        byteOffset += tamanho_crime(crime_atual);
+                        libera_crime(crime_atual);
+                        continue;
+                    }
+                    vetor_dados_str[nro_reg_str++] = dado_atual_str;
                     break;
             }
 
@@ -147,15 +152,14 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
         byteOffset += tamanho_crime(crime_atual);
         libera_crime(crime_atual); // libera memória alocada
     }
-
     switch (tipo_campo[0]) {
         case 'i':
             ordena_dados_int(vetor_dados_int, copia_nro_reg);
             escreve_dados_int(arq_ind, vetor_dados_int, copia_nro_reg);
             break;
         case 's':
-            ordena_dados_str(vetor_dados_str, copia_nro_reg);
-            escreve_dados_str(arq_ind, vetor_dados_str, copia_nro_reg);
+            ordena_dados_str(vetor_dados_str, nro_reg_str);
+            escreve_dados_str(arq_ind, vetor_dados_str, nro_reg_str);
             break;
     }
 

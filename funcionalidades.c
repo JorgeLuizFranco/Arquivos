@@ -126,17 +126,18 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     }
 
     int n_registros = cabecalho->nroRegArq - cabecalho->nroRegRem;
-    free(cabecalho);
 
     FILE* arq_ind = fopen(nome_arq_ind, "wb");
     if (arq_ind == NULL) {
         fclose(arq_bin);
+        free(cabecalho);
         erro();
         return;
     }
 
-    escreve_arq_ind(arq_bin, arq_ind, nome_campo, tipo_campo, n_registros);
+    escreve_arq_ind(arq_bin, arq_ind, nome_campo, tipo_campo, n_registros, cabecalho->proxByteOffset);
 
+    free(cabecalho);
     fclose(arq_bin);
     fclose(arq_ind);
     binarioNaTela(nome_arq_ind);
@@ -173,6 +174,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
     for (int i = 0; i < num_consultas; i++) {
         int num_campos;
+        if (i != 0) fseek(arq_bin, 0, SEEK_SET);
         scanf("%d", &num_campos);
         campo_busca_t** campos = le_campos_busca(num_campos);
         if (campos == NULL) {
