@@ -2,6 +2,7 @@
 
 void escreve_cabecalho_ind(FILE* arq_indices, cabecalho_indice_t* dados_cabecalho) {
     fwrite(&(dados_cabecalho->status), sizeof(char), 1, arq_indices);
+    fwrite(&(dados_cabecalho->nro_reg), sizeof(int), 1, arq_indices);
 }
 
 void escreve_dado_int(FILE* arq_indices, dados_int_t* dado_int) {
@@ -70,7 +71,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
 
     int copia_nro_reg = nro_registros;
 
-    cabecalho_indice_t* cabecalho_ind = cria_cabecalho_indice('0');
+    cabecalho_indice_t* cabecalho_ind = cria_cabecalho_indice('0', 0);
     if (cabecalho_ind == NULL) {
         erro();
         return;
@@ -119,6 +120,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
         }
 
         if (crime_atual->removido != '1') { 
+            cabecalho_ind->nro_reg++;
             switch (tipo_campo[0]) {
                 case 'i':
                     dado_atual_int = pega_dado_int(crime_atual, nome_campo, byteOffset);

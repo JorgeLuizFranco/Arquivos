@@ -1,10 +1,11 @@
 #include "indices.h"
 
-cabecalho_indice_t* cria_cabecalho_indice(char status) {
+cabecalho_indice_t* cria_cabecalho_indice(char status, int nro_reg) {
     cabecalho_indice_t* cabecalho_indice = (cabecalho_indice_t*) malloc(sizeof(cabecalho_indice_t));
     if (cabecalho_indice == NULL) return NULL;
 
     cabecalho_indice->status = status;
+    cabecalho_indice->nro_reg = nro_reg;
     return cabecalho_indice;
 }
 

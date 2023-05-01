@@ -2,8 +2,10 @@
 
 void le_cabecalho_indice(FILE* arq_indices, cabecalho_indice_t** cabecalho_indice) {
     char status;
+    int nro_reg;
     fread(&status, sizeof(char), 1, arq_indices);
-    *cabecalho_indice = cria_cabecalho_indice(status);
+    fread(&nro_reg, sizeof(int), 1, arq_indices);
+    *cabecalho_indice = cria_cabecalho_indice(status, nro_reg);
 }
 
 int le_dado_int(FILE* arq_indices, dados_int_t** dado_int) {

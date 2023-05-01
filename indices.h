@@ -9,9 +9,10 @@
     typedef struct Cabecalho_indice cabecalho_indice_t;
     struct Cabecalho_indice {
         char status;
+        int nro_reg;
     };
 
-    cabecalho_indice_t* cria_cabecalho_indice(char status);
+    cabecalho_indice_t* cria_cabecalho_indice(char status, int nro_reg);
 
     typedef struct Dados_inteiro dados_int_t;
     struct Dados_inteiro {
