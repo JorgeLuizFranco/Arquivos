@@ -196,11 +196,9 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
         // sera que tem o campo do arquivo de indice?
         int flag_campo_procurado = 0;
-        campo_busca_t* campo_ind = NULL;
         for (int j = 0; j < num_campos; j++) {
             if (strcmp(campos[j]->campo_busca, nome_campo) == 0) {
                 flag_campo_procurado = 1;
-                campo_ind = campos[j];
                 break;
             }
         }
@@ -224,7 +222,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
                 if (crime_atual->removido != '1' && satisfaz_query(crime_atual, campos, num_campos)) {
                     if (funcionalidade == 4) {
-                        mostra_crime(crime_atual);
+                        mostra_crime_tela(crime_atual);
                         regs_mostrados++;
                     } else if (funcionalidade == 5) {
                         // remover esse crime do arquivo binario marcando a flag removido como 1
@@ -275,7 +273,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
                 if (crime_atual->removido != '1' && satisfaz_query(crime_atual, campos, num_campos)) {
                     if (funcionalidade == 4) {
-                        mostra_crime(crime_atual);
+                        mostra_crime_tela(crime_atual);
                         regs_mostrados++;
                     } else if (funcionalidade == 5) {
                         desloca_offset(arq_bin, byteOffset);

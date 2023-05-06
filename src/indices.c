@@ -51,7 +51,7 @@ void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor) {
     qsort(vetor_dados_str, tamanho_vetor, sizeof(dados_str_t*), compara_dados_str);
 }
 
-int ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor) {
+void ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor) {
     if (tipoVar == 0)
         ordena_dados_int((dados_int_t**)vetor_dados, tamanho_vetor);
     else
@@ -172,7 +172,7 @@ void copia_dado_gen(void* dest_dado, void* src_dado, int tipoVar) {
 }
 
 void remove_dado(void*** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado) {
-    for (int i = pos_dado; i+1 < tam_vetor; i++)
+    for (int i = pos_dado; i+1 < *tam_vetor; i++)
         copia_dado_gen((*vetor_dados)[i], (*vetor_dados)[i+1], tipoVar);
     
     *vetor_dados = (void**) realloc(*vetor_dados, (--(*tam_vetor))*get_tam_var(tipoVar));

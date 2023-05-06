@@ -33,7 +33,7 @@
     void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor);
     dados_str_t* cria_dados_str(char* chaveBusca, long long int byteOffset);
 
-    int ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor);
+    void ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor);
 
     int compara_chave_busca(void* generico_esq, void* generico_dir, int flag_modo, int tipo_var);
 

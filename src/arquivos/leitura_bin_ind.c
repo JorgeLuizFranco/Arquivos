@@ -53,7 +53,7 @@ void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_ind
         if (dado_atual == NULL) {
             free(*cabecalho_indice);
             *cabecalho_indice = NULL;
-            libera_vetor_ate_pos(dados, num_dados-1);
+            libera_vetor_ate_pos(*dados, num_dados-1);
             return;
         }
         void** dados_realloc = (void**) realloc(*dados, (++num_dados)*(tipoVar == 0 ? sizeof(dados_int_t*) : sizeof(dados_str_t*)));
@@ -61,7 +61,7 @@ void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_ind
             free(dado_atual);
             free(*cabecalho_indice);
             *cabecalho_indice = NULL;
-            libera_vetor_ate_pos(dados, num_dados-2);
+            libera_vetor_ate_pos(*dados, num_dados-2);
             return;
         }
         *dados = dados_realloc;
