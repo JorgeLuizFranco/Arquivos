@@ -9,7 +9,6 @@
     #include "./arquivos/leitura_bin_ind.h"
     #include "./extras/utils.h"
     #include "busca.h"
-    #include "funcoes_anonimas.h"
 
     
     typedef void (*funcao_anonima_t)(crime_t*, FILE*, long long int);
