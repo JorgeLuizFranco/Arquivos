@@ -5,6 +5,7 @@
     #include <stdlib.h>
     #include <stdio.h>
     #include "extras/utils.h"
+    #include "registros.h"
 
     typedef struct Cabecalho_indice cabecalho_indice_t;
     struct Cabecalho_indice {
@@ -32,7 +33,23 @@
     void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor);
     dados_str_t* cria_dados_str(char* chaveBusca, long long int byteOffset);
 
+    int ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor);
 
     int compara_chave_busca(void* generico_esq, void* generico_dir, int flag_modo, int tipo_var);
 
+    dados_int_t* pega_dado_int(crime_t* crime_atual, char* nome_campo, long long int byteOffset);
+
+    dados_str_t* pega_dado_str(crime_t* crime_atual, char* nome_campo, long long int byteOffset);
+
+    void* pega_dado_generico(crime_t* crime_atual, char* nome_campo, long long int byteOffset, int tipoVar);
+
+    void* pega_chave_generico(void* dado_generico, int tipoVar);
+
+    long long int pega_offset_generico(void* dado_generico, int tipoVar);
+
+    void remove_dado(void*** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado);
+
+    int get_tipo_var(char* nome_tipo);
+
+    size_t get_tam_var(int tipoVar);
 #endif

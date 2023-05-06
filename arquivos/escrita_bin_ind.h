@@ -7,5 +7,6 @@
     #include "leitura_bin.h"
 
     void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros, long long int byteOffset);
-
+    void escreve_dados_gen(FILE* arq_indices, void** vetor_dados, int tipoVar, int tamanho_vetor);
+    
 #endif

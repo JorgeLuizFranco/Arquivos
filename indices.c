@@ -51,6 +51,13 @@ void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor) {
     qsort(vetor_dados_str, tamanho_vetor, sizeof(dados_str_t*), compara_dados_str);
 }
 
+int ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor) {
+    if (tipoVar == 0)
+        ordena_dados_int((dados_int_t**)vetor_dados, tamanho_vetor);
+    else
+        ordena_dados_str((dados_str_t**)vetor_dados, tamanho_vetor);
+}
+
 int pega_tipo_dado(void* dado) {
     if (sizeof(dado) == sizeof(dados_int_t)) {
         return 0;
@@ -80,3 +87,102 @@ int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, v
 }
 
 
+dados_int_t* pega_dado_int(crime_t* crime_atual, char* nome_campo, long long int byteOffset) {
+    dados_int_t* dado_atual = NULL;
+
+    switch (nome_campo[0]) {
+        // idCrime
+        case 'i':
+            dado_atual = cria_dados_int(crime_atual->idCrime, byteOffset);
+            break;
+        // numeroArtigo
+        case 'n':
+            dado_atual = cria_dados_int(crime_atual->numeroArtigo, byteOffset);
+            break;
+    }
+
+    return dado_atual;
+}
+
+dados_str_t* pega_dado_str(crime_t* crime_atual, char* nome_campo, long long int byteOffset) {
+    dados_str_t* dado_atual = NULL;
+
+    switch (nome_campo[2]) {
+        // dataCrime
+        case 't':
+            dado_atual = cria_dados_str(crime_atual->dataCrime, byteOffset);
+            break;
+        // marcaCelular
+        case 'r':
+            dado_atual = cria_dados_str(crime_atual->marcaCelular, byteOffset);
+            break;
+        // lugarCrime
+        case 'g':
+            dado_atual = cria_dados_str(crime_atual->lugarCrime, byteOffset);
+            break;
+        // descricaoCrime
+        case 's':
+            dado_atual = cria_dados_str(crime_atual->descricaoCrime, byteOffset);
+            break;
+    }
+
+    return dado_atual;
+}
+
+void* pega_dado_generico(crime_t* crime_atual, char* nome_campo, long long int byteOffset, int tipoVar) {
+    if (tipoVar == 0) {
+        return (void*)pega_dado_int(crime_atual, nome_campo, byteOffset);
+    } else {
+        return (void*)pega_dado_str(crime_atual, nome_campo, byteOffset);
+    }
+}
+
+void* pega_chave_generico(void* dado_generico, int tipoVar) {
+    if (tipoVar == 0) {
+        return (void*)(&(((dados_int_t*)dado_generico)->chaveBusca));
+    } else {
+        return (void*)(((dados_str_t*)dado_generico)->chaveBusca);
+    }
+}
+
+long long int pega_offset_generico(void* dado_generico, int tipoVar) {
+    if (tipoVar == 0) {
+        return ((dados_int_t*)dado_generico)->byteOffset;
+    } else {
+        return ((dados_str_t*)dado_generico)->byteOffset;
+    }
+}
+
+void copia_dado_int(dados_int_t* dest_dado, dados_int_t* src_dado) {
+    dest_dado->byteOffset = src_dado->byteOffset;
+    dest_dado->chaveBusca = src_dado->chaveBusca;
+}
+
+void copia_dado_str(dados_str_t* dest_dado, dados_str_t* src_dado) {
+    dest_dado->byteOffset = src_dado->byteOffset;
+    for (int i = 0; i < 12; i++)
+        dest_dado->chaveBusca[i] = src_dado->chaveBusca[i];
+}
+
+void copia_dado_gen(void* dest_dado, void* src_dado, int tipoVar) {
+    if (tipoVar == 0)
+        copia_dado_int((dados_int_t*)dest_dado, (dados_int_t*)src_dado);
+    else
+        copia_dado_str((dados_str_t*)dest_dado, (dados_str_t*)src_dado);
+}
+
+void remove_dado(void*** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado) {
+    for (int i = pos_dado; i+1 < tam_vetor; i++)
+        copia_dado_gen((*vetor_dados)[i], (*vetor_dados)[i+1], tipoVar);
+    
+    *vetor_dados = (void**) realloc(*vetor_dados, (--(*tam_vetor))*get_tam_var(tipoVar));
+}
+
+int get_tipo_var(char* nome_tipo) {
+    return nome_tipo[0] == 'i' ? 0 : 1;
+}
+
+size_t get_tam_var(int tipoVar) {
+    if (tipoVar == 0) return sizeof(dados_int_t*);
+    return sizeof(dados_str_t*);
+}

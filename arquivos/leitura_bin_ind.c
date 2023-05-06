@@ -24,7 +24,15 @@ void le_dado_str(FILE* arq_indices, dados_str_t** dado_str) {
     *dado_str = cria_dados_str(chaveBusca, byteOffset);
 }
 
-void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_int, dados_str_t*** dados_str, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
+void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
+    if (tipoVar == 0) {
+        le_dado_int(arq_indices, (dados_int_t**)dado_gen);
+    } else {
+        le_dado_str(arq_indices, (dados_str_t**)dado_gen);
+    }
+}
+
+void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
     *num_ind = 0;
     if (arq_indices == NULL) return;
 
@@ -39,52 +47,24 @@ void le_arq_indices(FILE* arq_indices, char* tipo_campo, dados_int_t*** dados_in
     int num_dados = 0;
     while ((*cabecalho_indice)->nro_reg--) {
         (*num_ind)++;
-        switch (tipo_campo[0]) {
-            case 'i':{
-                dados_int_t* dado_atual = NULL;
-                le_dado_int(arq_indices, &dado_atual);
-                if (dado_atual == NULL) {
-                    free(*cabecalho_indice);
-                    *cabecalho_indice = NULL;
-                    libera_vetor_ate_pos((void**)(*dados_int), num_dados-1);
-                    continue;
-                }
 
-                dados_int_t** dados_int_realloc = (dados_int_t**) realloc(*dados_int, (++num_dados)*sizeof(dados_int_t*));
-                if (dados_int_realloc == NULL) {
-                    free(dado_atual);
-                    free(*cabecalho_indice);
-                    *cabecalho_indice = NULL;
-                    libera_vetor_ate_pos((void**)(*dados_int), num_dados-2);
-                    return;
-                }
-                *dados_int = dados_int_realloc;
-                (*dados_int)[num_dados-1] = dado_atual;
-                
-                break;
-            }
-            case 's':{
-                dados_str_t* dado_atual = NULL;
-                le_dado_str(arq_indices, &dado_atual);
-                if (dado_atual == NULL) {
-                    free(*cabecalho_indice);
-                    *cabecalho_indice = NULL;
-                    libera_vetor_ate_pos((void*)(*dados_str), num_dados-1);
-                    continue;
-                }
-
-                dados_str_t** dados_str_realloc = (dados_str_t**) realloc(*dados_str, (++num_dados) * sizeof(dados_str_t*));
-                if (dados_str_realloc == NULL) {
-                    free(*cabecalho_indice);
-                    free(dado_atual);
-                    *cabecalho_indice = NULL;
-                    libera_vetor_ate_pos((void**)(*dados_str), num_dados-2);
-                    return;
-                }
-                *dados_str = dados_str_realloc;
-                (*dados_str)[num_dados-1] = dado_atual;
-                break;
-            }
+        void* dado_atual = NULL;
+        le_dado_gen(arq_indices, &dado_atual, tipoVar);
+        if (dado_atual == NULL) {
+            free(*cabecalho_indice);
+            *cabecalho_indice = NULL;
+            libera_vetor_ate_pos(dados, num_dados-1);
+            return;
         }
+        void** dados_realloc = (void**) realloc(*dados, (++num_dados)*(tipoVar == 0 ? sizeof(dados_int_t*) : sizeof(dados_str_t*)));
+        if (dados_realloc == NULL) {
+            free(dado_atual);
+            free(*cabecalho_indice);
+            *cabecalho_indice = NULL;
+            libera_vetor_ate_pos(dados, num_dados-2);
+            return;
+        }
+        *dados = dados_realloc;
+        (*dados)[num_dados-1] = dado_atual;
     }
 }
