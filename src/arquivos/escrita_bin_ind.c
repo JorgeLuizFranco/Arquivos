@@ -45,9 +45,9 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
 
     long long int byteOffset = TAMANHO_CABECALHO;
 
-    int tipoVar = (tipo_campo[0] == 'i') ? 0 : 1;
+    int tipoVar = get_tipo_var(tipo_campo);
     void** vetor_dados = NULL;
-    vetor_dados = (void**) malloc(nro_registros * (tipoVar == 0 ? sizeof(dados_int_t*) : sizeof(dados_str_t*)));
+    vetor_dados = (void**) malloc(nro_registros * get_tam_var(tipoVar));
     if (vetor_dados == NULL) {
         erro();
         free(cabecalho_ind);
@@ -70,7 +70,6 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
         }
 
         if (crime_atual->removido != '1') { 
-            cabecalho_ind->nro_reg++;
             dado_atual = pega_dado_generico(crime_atual, nome_campo, byteOffset, tipoVar);
             if (dado_atual == NULL) {
                 libera_crime(crime_atual);
@@ -82,6 +81,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
                     free(dado_atual);
                     byteOffset += tamanho_crime(crime_atual);
                     libera_crime(crime_atual);
+                    continue;
                 }
                 vetor_dados[nro_reg_str++] = dado_atual;
             } else {
@@ -89,6 +89,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
             }
             vetor_dados[copia_nro_reg - nro_registros] = dado_atual;
             nro_registros--;
+            cabecalho_ind->nro_reg++;
         }
         
         byteOffset += tamanho_crime(crime_atual);
