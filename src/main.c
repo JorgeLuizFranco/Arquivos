@@ -14,6 +14,7 @@ int main() {
     char nome_arq_idx[100];
     char nome_campo[20];
     char tipo_campo[10];
+    int num_consultas;
 
     scanf("%d", &funcao);
     
@@ -37,13 +38,18 @@ int main() {
 
             break;
         
-        case 4:{
-            
-            int num_consultas;
+        case 4:
+
             scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
             procura_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
             break;
-        }
+        
+        case 5:
+
+            scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+            remove_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+
+            break;
     }
 }

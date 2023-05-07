@@ -172,12 +172,14 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     FILE* arq_idx = fopen(nome_arq_idx, "rb+");
 
     void** dados = NULL;
-    int tipoVar = (tipo_campo[0] == 'i') ? 0 : 1;
+    int tipoVar = get_tipo_var(tipo_campo);
     cabecalho_indice_t* cabecalho_indice = NULL;
     crime_t* crime_atual = NULL;
     int num_indices;
 
+    fprintf(stderr, "a\n");
     le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_indices);
+    fprintf(stderr, "a\n");
 
     for (int i = 0; i < num_consultas; i++) {
 
@@ -190,6 +192,9 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         scanf("%d", &num_campos);
         campo_busca_t** campos = le_campos_busca(num_campos);
         if (campos == NULL) {
+            free(cabecalho);
+            fclose(arq_bin);
+            fclose(arq_idx);
             erro();
             return;
         }
@@ -198,7 +203,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         int flag_campo_procurado = 0;
         for (int j = 0; j < num_campos; j++) {
             if (strcmp(campos[j]->campo_busca, nome_campo) == 0) {
-                flag_campo_procurado = 1;
+                flag_campo_procurado = j+1;
                 break;
             }
         }
@@ -228,12 +233,15 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         // remover esse crime do arquivo binario marcando a flag removido como 1
                         desloca_offset(arq_bin, byteOffset);
                         crime_atual->removido = '1';
+                        cabecalho->nroRegRem++;
                         escreve_registro_criminal(arq_bin, crime_atual);
                         // procurar no arquivo de índices o registro atual e remove-lo por shiftacao
                         int ind_arquivo = indice_procura_registro(crime_atual, byteOffset, dados, num_indices, nome_campo, tipoVar);
                         if (ind_arquivo >= 0) {
                             // se estiver presente no arquivo de indices, remove da lista de dados
                             remove_dado(&dados, tipoVar, &num_indices, ind_arquivo);
+                            cabecalho_indice->nro_reg--;
+                            fprintf(stderr, "Agora eh %d\n", cabecalho_indice->nro_reg);
                         }
                     }
                 }
@@ -250,15 +258,16 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             int low;
             int high;
             long long int byteOffset;
-            void* chaveBusca = pega_chave_generico(dados, tipoVar);
-
+            void* chaveBusca = tipoVar == 0 ? (void*)&(campos[flag_campo_procurado-1]->chaveBuscaInt) : (void*)(campos[flag_campo_procurado-1]->chaveBuscaStr);
+            fprintf(stderr, "a\n");
             busca_bin_campos(dados, num_indices, &low, &high, chaveBusca, tipoVar);
-            
+            fprintf(stderr, "a\n");
             while (low <= high) {
                 
                 void* dado_atual = dados[low];
                 byteOffset = pega_offset_generico(dado_atual, tipoVar);
                 crime_atual = le_crime_bin_offset(arq_bin, byteOffset);
+                fprintf(stderr, "a\n");
 
                 if (crime_atual == NULL) {
                     fclose(arq_idx);
@@ -276,10 +285,15 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         mostra_crime_tela(crime_atual);
                         regs_mostrados++;
                     } else if (funcionalidade == 5) {
+                        fprintf(stderr, "a\n");
                         desloca_offset(arq_bin, byteOffset);
                         crime_atual->removido = '1';
+                        cabecalho->nroRegRem++;
+                        cabecalho_indice->nro_reg--;
                         escreve_registro_criminal(arq_bin, crime_atual);
+                        fprintf(stderr, "a %d a\n", cabecalho_indice->nro_reg);
                         remove_dado(&dados, tipoVar, &num_indices, low);
+
                         low--;
                         high--;
                     }
@@ -294,8 +308,30 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             printf("Registro inexistente.\n");
         }
 
+        libera_vetor_ate_pos((void**)campos, num_campos-1);
 
+    }
 
-        free(campos);
+    if (funcionalidade == 5) {
+        desloca_offset(arq_bin, 0);
+        escreve_cabecalho(arq_bin, cabecalho);
+        if (arq_idx != NULL) {
+            desloca_offset(arq_idx, 0);
+            escreve_cabecalho_ind(arq_idx, cabecalho_indice);
+            escreve_dados_gen(arq_idx, dados, tipoVar, num_indices);
+        }
+    }
+
+    free(cabecalho);
+
+    fclose(arq_bin);
+    fclose(arq_idx);
+
+    if (cabecalho_indice != NULL) free(cabecalho_indice);
+    libera_vetor_ate_pos(dados, num_indices-1);
+
+    if (funcionalidade == 5) {
+        binarioNaTela(nome_arq_bin);
+        binarioNaTela(nome_arq_idx);
     }
 }
