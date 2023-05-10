@@ -6,7 +6,7 @@
     #include "./arquivos/escrita_bin.h"
     #include "./arquivos/leitura_bin_ind.h"
     #include "./arquivos/escrita_bin_ind.h"
-    #include "./io/escrita_tela.h"
+    #include "./io/io_crimes.h"
     #include "./structs/registros.h"
     #include "./structs/indices.h"
     #include "./structs/campos.h"

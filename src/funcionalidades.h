@@ -1,7 +1,7 @@
 #ifndef FUNCIONALIDADES_H
     #define FUNCIONALIDADES_H
 
-    #include "./io/escrita_tela.h"
+    #include "./io/io_crimes.h"
     #include "./arquivos/escrita_bin_ind.h"
     #include "./arquivos/escrita_bin.h"
     #include "./arquivos/leitura_bin.h"
@@ -9,6 +9,7 @@
     #include "./arquivos/leitura_bin_ind.h"
     #include "./extras/utils.h"
     #include "busca.h"
+    #include "insercao.h"
 
     
     typedef void (*funcao_anonima_t)(crime_t*, FILE*, long long int);
@@ -29,5 +30,7 @@
     void procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas);
 
     void remove_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas);
+
+    void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas);
 
 #endif

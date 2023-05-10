@@ -51,5 +51,12 @@ int main() {
             remove_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
             break;
+        
+        case 6:
+
+            scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+            insere_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+
+            break;
     }
 }

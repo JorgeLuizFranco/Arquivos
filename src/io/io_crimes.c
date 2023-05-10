@@ -1,4 +1,4 @@
-#include "escrita_tela.h"
+#include "io_crimes.h"
 
 /**
 *
@@ -89,4 +89,56 @@ void mostra_crimes_tela_arq(FILE* arq_bin, int n_registros) {
         
         libera_crime(crime_atual); // libera memória alocada
     }
+}
+
+int copia_str_limitada(char* dest, char* src, int tamanho) {
+    for (int i = 0; i < tamanho; i++)
+        dest[i] = src[i];
+    
+    return 1;
+}
+
+int copia_str_ilimitada(char** dest, char* src) {
+    *dest = (char*) malloc(sizeof(char)*((int)strlen(src)));
+    if (*dest == NULL) return 0;
+
+    return copia_str_limitada(*dest, src, (int)strlen(src));
+}
+
+crime_t* le_crime_tela() {
+    char string_lida[100];
+    crime_t* crime = (crime_t*) malloc(sizeof(crime_t));
+    if (crime == NULL) return NULL;
+    crime->lugarCrime = NULL;
+    crime->descricaoCrime = NULL;
+
+    scanf("%d", &(crime->idCrime));
+    
+    scan_quote_string(string_lida);
+    if (copia_str_limitada(crime->dataCrime, string_lida, 10) == 0) {
+        libera_crime(crime);
+        return NULL;
+    }
+
+    scanf("%d", &(crime->numeroArtigo));
+
+    scan_quote_string(string_lida);
+    if (copia_str_ilimitada(&(crime->lugarCrime), string_lida) == 0) {
+        libera_crime(crime);
+        return NULL;
+    }
+    
+    scan_quote_string(string_lida);
+    if (copia_str_ilimitada(&(crime->descricaoCrime), string_lida) == 0) {
+        libera_crime(crime);
+        return NULL;
+    }
+    
+    scan_quote_string(string_lida);
+    if (copia_str_limitada(crime->marcaCelular, string_lida, 12) == 0) {
+        libera_crime(crime);
+        return NULL;
+    }
+    
+    return crime;
 }

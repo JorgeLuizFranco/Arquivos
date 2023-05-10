@@ -53,6 +53,11 @@ void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor) {
     qsort(vetor_dados_str, tamanho_vetor, sizeof(dados_str_t*), compara_dados_str);
 }
 
+int compara_dados_gen(void* esquerda, void* direita, int tipoVar) {
+    if (tipoVar == 0) return compara_dados_int(esquerda, direita);
+    return compara_dados_str(esquerda, direita);
+}
+
 void ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor) {
     if (tipoVar == 0)
         ordena_dados_int((dados_int_t**)vetor_dados, tamanho_vetor);

@@ -52,4 +52,6 @@
     int get_tipo_var(char* nome_tipo);
 
     size_t get_tam_var(int tipoVar);
+
+    int compara_dados_gen(void* esquerda, void* direita, int tipoVar);
 #endif
