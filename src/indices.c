@@ -19,12 +19,12 @@ dados_int_t* cria_dados_int(int chaveBusca, long long int byteOffset) {
     return dados_int;
 }
 
-dados_str_t* cria_dados_str(char* chaveBusca, long long int byteOffset) {
+dados_str_t* cria_dados_str(char* chaveBusca, int limitacao, long long int byteOffset) {
     dados_str_t* dados_str = (dados_str_t*) malloc(sizeof(dados_str_t));
     if (dados_str == NULL) return NULL;
 
     int i = 0;
-    for (; i < 12 && chaveBusca[i] != '\0'; i++)
+    for (; i < 12 && i < limitacao; i++)
         dados_str->chaveBusca[i] = chaveBusca[i];
     
     for (; i<12; i++)
@@ -36,7 +36,8 @@ dados_str_t* cria_dados_str(char* chaveBusca, long long int byteOffset) {
 }
 
 int compara_dados_int(const void* esquerda, const void* direita) {
-    return (*(const dados_int_t**)esquerda)->chaveBusca - (*(const dados_int_t**)direita)->chaveBusca;
+    int sub = (*(const dados_int_t**)esquerda)->chaveBusca - (*(const dados_int_t**)direita)->chaveBusca;
+    return sub != 0 ? sub : (*(const dados_int_t**)esquerda)->byteOffset - (*(const dados_int_t**)direita)->byteOffset;
 }
 
 void ordena_dados_int(dados_int_t** vetor_dados_int, int tamanho_vetor) {
@@ -44,7 +45,8 @@ void ordena_dados_int(dados_int_t** vetor_dados_int, int tamanho_vetor) {
 }
 
 int compara_dados_str(const void* esquerda, const void* direita) {
-    return (int)strcmp((*(const dados_str_t**)esquerda)->chaveBusca, (*(const dados_str_t**)direita)->chaveBusca);
+    int comp = (int)strcmp((*(const dados_str_t**)esquerda)->chaveBusca, (*(const dados_str_t**)direita)->chaveBusca);
+    return comp != 0 ? comp : (*(const dados_str_t**)esquerda)->byteOffset - (*(const dados_str_t**)direita)->byteOffset;
 }
 
 void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor) {
@@ -66,22 +68,22 @@ int pega_tipo_dado(void* dado) {
     }
 }
 
-int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, void* /* char* ou int* */ generico_dir, int flag_modo, int tipo_var) {
+int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, void* /* char* ou int* */ generico_dir, int flag_modo, int tipo_var, int flag_dinamica) {
     if (tipo_var == 0) {
         if (flag_modo == 1) {
-            return ((dados_int_t*)generico_esq)->chaveBusca >= *((int*)generico_dir);
+            return *((int*)pega_chave_generico(generico_esq, tipo_var)) >= *((int*)generico_dir);
         } else if (flag_modo == -1) {
-            return ((dados_int_t*)generico_esq)->chaveBusca <= *((int*)generico_dir);
+            return *((int*)pega_chave_generico(generico_esq, tipo_var)) <= *((int*)generico_dir);
         } else {
-            return ((dados_int_t*)generico_esq)->chaveBusca == *((int*)generico_dir);
+            return *((int*)pega_chave_generico(generico_esq, tipo_var)) == *((int*)generico_dir);
         }
     } else {
         if (flag_modo == 1) {
-            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) <= 0;
+            return compara_string_limitada((char*)pega_chave_generico(generico_esq, tipo_var), (char*)generico_dir, 12, flag_dinamica) <= 0;
         } else if (flag_modo == -1) {
-            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) >= 0;
+            return compara_string_limitada((char*)pega_chave_generico(generico_esq, tipo_var), (char*)generico_dir, 12, flag_dinamica) >= 0;
         } else {
-            return compara_string_limitada(((dados_str_t*)generico_esq)->chaveBusca, (char*)generico_dir, 12, 1) == 0;
+            return compara_string_limitada((char*)pega_chave_generico(generico_esq, tipo_var), (char*)generico_dir, 12, flag_dinamica) == 0;
         }
     }
 }
@@ -110,19 +112,19 @@ dados_str_t* pega_dado_str(crime_t* crime_atual, char* nome_campo, long long int
     switch (nome_campo[2]) {
         // dataCrime
         case 't':
-            dado_atual = cria_dados_str(crime_atual->dataCrime, byteOffset);
+            dado_atual = cria_dados_str(crime_atual->dataCrime, 10, byteOffset);
             break;
         // marcaCelular
         case 'r':
-            dado_atual = cria_dados_str(crime_atual->marcaCelular, byteOffset);
+            dado_atual = cria_dados_str(crime_atual->marcaCelular, 12, byteOffset);
             break;
         // lugarCrime
         case 'g':
-            dado_atual = cria_dados_str(crime_atual->lugarCrime, byteOffset);
+            dado_atual = cria_dados_str(crime_atual->lugarCrime, (int)strlen(crime_atual->lugarCrime), byteOffset);
             break;
         // descricaoCrime
         case 's':
-            dado_atual = cria_dados_str(crime_atual->descricaoCrime, byteOffset);
+            dado_atual = cria_dados_str(crime_atual->descricaoCrime, (int)strlen(crime_atual->descricaoCrime), byteOffset);
             break;
     }
 

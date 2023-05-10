@@ -21,7 +21,7 @@ void le_dado_str(FILE* arq_indices, dados_str_t** dado_str) {
     long long int byteOffset;
     fread(chaveBusca, sizeof(char), 12, arq_indices);
     fread(&byteOffset, sizeof(long long int), 1, arq_indices);
-    *dado_str = cria_dados_str(chaveBusca, byteOffset);
+    *dado_str = cria_dados_str(chaveBusca, 12, byteOffset);
 }
 
 void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
@@ -45,7 +45,7 @@ void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_ind
     }
 
     int num_dados = 0;
-    while ((*cabecalho_indice)->nro_reg--) {
+    for (int i = 0; i < (*cabecalho_indice)->nro_reg; i++) {
         (*num_ind)++;
 
         void* dado_atual = NULL;

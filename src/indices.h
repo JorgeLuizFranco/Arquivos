@@ -31,11 +31,11 @@
     };
 
     void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor);
-    dados_str_t* cria_dados_str(char* chaveBusca, long long int byteOffset);
+    dados_str_t* cria_dados_str(char* chaveBusca, int limitacao, long long int byteOffset);
 
     void ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor);
 
-    int compara_chave_busca(void* generico_esq, void* generico_dir, int flag_modo, int tipo_var);
+    int compara_chave_busca(void* generico_esq, void* generico_dir, int flag_modo, int tipo_var, int flag_dinamica);
 
     dados_int_t* pega_dado_int(crime_t* crime_atual, char* nome_campo, long long int byteOffset);
 
