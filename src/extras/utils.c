@@ -105,26 +105,19 @@ int checa_existencia_arquivo(char* nome_arquivo) {
     return 0;
 }
 
-int compara_string_limitada(char* s1, char* s2, int tamanho, int flag_s2_dinamica) {
-    int i = 0;
-    for (; i < tamanho && s2[i] != '\0' && s1[i] != '$'; i++)
-        if (s1[i] > s2[i]) {
-            return -1;
-        } else if (s1[i] < s2[i]) {
-            return 1;
-        }
-    if (i == tamanho || s1[i] == '$') {
-        if (flag_s2_dinamica) {
-            if (s2[i] == '\0') {
-                return 0;
-            } else {
-                return 1;
-            }
-        } else {
-            return 0;
-        }
-    } else {
-        return -1;
-    }
+void libera_memo_consultas(int flag_erro, FILE* arq_bin, cabecalho_t* cabecalho, FILE* arq_idx, cabecalho_indice_t* cabecalho_indice, campo_busca_t** campos, int num_campos, void** dados, int num_dados) {
 
+    if (cabecalho_indice != NULL) free(cabecalho_indice);
+    if (arq_idx != NULL) fclose(arq_idx);    
+    if (dados != NULL) libera_vetor_ate_pos(dados, num_dados-1);
+    if (cabecalho != NULL) free(cabecalho);
+    if (arq_bin != NULL) fclose(arq_bin);
+    if (campos != NULL) libera_vetor_ate_pos((void**)campos, num_campos-1);
+
+    if (flag_erro) erro();
+}
+
+void desloca_offset(FILE* arq_bin, long long int byteOffset) {
+    long long int posicao = ftell(arq_bin);
+    fseek(arq_bin, byteOffset - posicao, SEEK_CUR);
 }

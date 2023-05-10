@@ -1,74 +1,5 @@
 #include "busca.h"
 
-campo_busca_t* le_campo_busca() {
-    campo_busca_t* campo_atual = (campo_busca_t*) malloc(sizeof(campo_busca_t));
-    if (campo_atual == NULL) return NULL;
-
-    scanf("%s", campo_atual->campo_busca);
-
-    if (strcmp("idCrime", campo_atual->campo_busca) == 0 || strcmp("numeroArtigo", campo_atual->campo_busca) == 0) {
-        scanf("%d", &(campo_atual->chaveBuscaInt));
-    } else {
-        scan_quote_string(campo_atual->chaveBuscaStr);
-    }
-    return campo_atual;
-}
-
-campo_busca_t** le_campos_busca(int num_campos) {
-
-    campo_busca_t** campos_buscados = (campo_busca_t**) malloc(num_campos * sizeof(campo_busca_t*));
-    if (campos_buscados == NULL) return NULL;
-
-    for (int i = 0; i < num_campos; i++) {
-        campos_buscados[i] = le_campo_busca();
-        if (campos_buscados[i] == NULL) {
-            libera_vetor_ate_pos((void**)campos_buscados, i-1);
-            return NULL;
-        }
-    }
-
-    return campos_buscados;
-}
-
-int satisfaz_campo(crime_t* crime_atual, campo_busca_t* campo_atual) {
-    if (strcmp(campo_atual->campo_busca, "idCrime") == 0) {
-        return crime_atual->idCrime == campo_atual->chaveBuscaInt;
-    } else if (strcmp(campo_atual->campo_busca, "numeroArtigo") == 0) {
-        return crime_atual->numeroArtigo == campo_atual->chaveBuscaInt;
-    } else if (strcmp(campo_atual->campo_busca, "dataCrime") == 0) {
-        return compara_string_limitada(crime_atual->dataCrime, campo_atual->chaveBuscaStr, 10, 1) == 0;
-    } else if (strcmp(campo_atual->campo_busca, "marcaCelular") == 0) {
-        return compara_string_limitada(crime_atual->marcaCelular, campo_atual->chaveBuscaStr, 12, 1) == 0;
-    } else {
-        char* string_dinamica_original;
-        
-        if (strcmp(campo_atual->campo_busca, "descricaoCrime") == 0) {
-            string_dinamica_original = crime_atual->descricaoCrime;
-        } else {
-            string_dinamica_original = crime_atual->lugarCrime;
-        }
-
-        return strcmp(campo_atual->chaveBuscaStr, string_dinamica_original) == 0;
-    }
-    return -1;
-}
-
-int satisfaz_query(crime_t* crime_atual, campo_busca_t** query_atual, int n_campos) {
-    int resposta = 1; // satisfaz. Se eu encontrar evidencias do contrario, seto pra zero
-
-    campo_busca_t* campo_atual;
-
-    for (int i = 0; i < n_campos; i++) {
-        campo_atual = query_atual[i];
-        if (satisfaz_campo(crime_atual, campo_atual) == 0) {
-            resposta = 0;
-            break;
-        }
-    }
-
-    return resposta;
-}
-
 void busca_bin_campos(void** ind_int, int num_regs, int* low_reg, int* high_reg, void* chaveBusca, int tipo_var, int flag_dinamica) {
     // quero que *low aponte pro menor para e *high aponte para o maior cara que satisfaçam a busca
     *low_reg = -1;
@@ -164,13 +95,12 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
     FILE* arq_bin = fopen(nome_arq_bin, "rb+");
     if (arq_bin == NULL) {
-        erro();
+        libera_memo_consultas(1, NULL, NULL, NULL, NULL, NULL, -1, NULL, -1);
         return;
     }
     cabecalho_t* cabecalho = le_cabecalho_bin(arq_bin);
     if (cabecalho == NULL) {
-        fclose(arq_bin);
-        erro();
+        libera_memo_consultas(1, arq_bin, NULL, NULL, NULL, NULL, -1, NULL, -1);
         return;
     }
 
@@ -183,7 +113,11 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     int num_indices;
 
     le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_indices);
-    
+    if (dados == NULL) {
+        libera_memo_consultas(1, arq_bin, cabecalho, arq_idx, cabecalho_indice, NULL, -1, NULL, -1);
+        return;
+    }
+
     for (int i = 0; i < num_consultas; i++) {
 
         int regs_mostrados = 0;
@@ -195,10 +129,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         scanf("%d", &num_campos);
         campo_busca_t** campos = le_campos_busca(num_campos);
         if (campos == NULL) {
-            free(cabecalho);
-            fclose(arq_bin);
-            fclose(arq_idx);
-            erro();
+            libera_memo_consultas(1, arq_bin, cabecalho, arq_idx, cabecalho_indice, NULL, -1, dados, num_indices);
             return;
         }
 
@@ -217,14 +148,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             while (byteOffset < cabecalho->proxByteOffset) {
                 crime_atual = le_crime_bin(arq_bin);
                 if (crime_atual == NULL) {
-                    if (cabecalho_indice != NULL) {
-                        fclose(arq_idx);
-                        free(cabecalho_indice);
-                        if (dados != NULL) libera_vetor_ate_pos(dados, num_indices-1);
-                    }
-                    free(cabecalho);
-                    fclose(arq_bin);
-                    libera_vetor_ate_pos((void**)campos, num_campos-1);
+                    libera_memo_consultas(1, arq_bin,  cabecalho, arq_idx, cabecalho_indice, campos, num_campos, dados, num_indices);
                     return;
                 }
 
@@ -234,17 +158,10 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         regs_mostrados++;
                     } else if (funcionalidade == 5) {
                         // remover esse crime do arquivo binario marcando a flag removido como 1
-                        desloca_offset(arq_bin, byteOffset);
-                        crime_atual->removido = '1';
-                        cabecalho->nroRegRem++;
-                        escreve_registro_criminal(arq_bin, crime_atual);
+                        remocao_logica(arq_bin, crime_atual, cabecalho, byteOffset);
                         // procurar no arquivo de índices o registro atual e remove-lo por shiftacao
                         int ind_arquivo = indice_procura_registro(crime_atual, byteOffset, dados, num_indices, nome_campo, tipoVar);
-                        if (ind_arquivo >= 0) {
-                            // se estiver presente no arquivo de indices, remove da lista de dados
-                            remove_dado(&dados, tipoVar, &num_indices, ind_arquivo);
-                            cabecalho_indice->nro_reg--;
-                        }
+                        remove_com_shift(&dados, tipoVar, &num_indices, ind_arquivo, cabecalho_indice);
                     }
                 }
 
@@ -269,13 +186,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                 crime_atual = le_crime_bin_offset(arq_bin, byteOffset);
             
                 if (crime_atual == NULL) {
-                    fclose(arq_idx);
-                    free(cabecalho_indice);
-                    if (dados != NULL) libera_vetor_ate_pos(dados, num_indices-1);
-                    
-                    free(cabecalho);
-                    fclose(arq_bin);
-                    libera_vetor_ate_pos((void**)campos, num_campos-1);
+                    libera_memo_consultas(1, arq_bin, cabecalho, arq_idx, cabecalho_indice, campos, num_campos, dados, num_indices);
                     return;
                 }
 
@@ -284,13 +195,8 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         mostra_crime_tela(crime_atual);
                         regs_mostrados++;
                     } else if (funcionalidade == 5) {
-                        desloca_offset(arq_bin, byteOffset);
-                        crime_atual->removido = '1';
-                        cabecalho->nroRegRem++;
-                        cabecalho_indice->nro_reg--;
-                        escreve_registro_criminal(arq_bin, crime_atual);
-                        remove_dado(&dados, tipoVar, &num_indices, low);
-
+                        remocao_logica(arq_bin, crime_atual, cabecalho, byteOffset);
+                        remove_com_shift(&dados, tipoVar, &num_indices, low, cabecalho_indice);
                         low--;
                         high--;
                     }
@@ -320,13 +226,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         }
     }
 
-    free(cabecalho);
-
-    fclose(arq_bin);
-    fclose(arq_idx);
-
-    if (cabecalho_indice != NULL) free(cabecalho_indice);
-    libera_vetor_ate_pos(dados, num_indices-1);
+   libera_memo_consultas(0, arq_bin, cabecalho, arq_idx, cabecalho_indice, NULL, -1, dados, num_indices);
 
     if (funcionalidade == 5) {
         binarioNaTela(nome_arq_bin);

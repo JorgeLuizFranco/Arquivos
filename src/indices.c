@@ -68,6 +68,30 @@ int pega_tipo_dado(void* dado) {
     }
 }
 
+int compara_string_limitada(char* s1, char* s2, int tamanho, int flag_s2_dinamica) {
+    int i = 0;
+    for (; i < tamanho && s2[i] != '\0' && s1[i] != '$'; i++)
+        if (s1[i] > s2[i]) {
+            return -1;
+        } else if (s1[i] < s2[i]) {
+            return 1;
+        }
+    if (i == tamanho || s1[i] == '$') {
+        if (flag_s2_dinamica) {
+            if (s2[i] == '\0') {
+                return 0;
+            } else {
+                return 1;
+            }
+        } else {
+            return 0;
+        }
+    } else {
+        return -1;
+    }
+
+}
+
 int compara_chave_busca(void* generico_esq /* dados_int_t* ou dados_str_t* */, void* /* char* ou int* */ generico_dir, int flag_modo, int tipo_var, int flag_dinamica) {
     if (tipo_var == 0) {
         if (flag_modo == 1) {

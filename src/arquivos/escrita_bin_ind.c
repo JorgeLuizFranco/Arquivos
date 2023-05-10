@@ -106,3 +106,10 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     free(cabecalho_ind);
     libera_vetor_ate_pos(vetor_dados, copia_nro_reg-1);
 }
+
+void remove_com_shift(void*** dados, int tipoVar, int* num_indices, int ind_removido, cabecalho_indice_t* cabecalho_indice) {
+    if (ind_removido >= 0) {
+        cabecalho_indice->nro_reg--;
+        remove_dado(dados, tipoVar, num_indices, ind_removido);
+    }
+}

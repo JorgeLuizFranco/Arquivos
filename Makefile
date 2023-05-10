@@ -1,7 +1,6 @@
 CXX=gcc
 CXXFLAGS=-Wall -Wextra -Werror
 EXEC=programa
-OBJS=grafo.o main.o
 
 SRC_FOLDER=src
 BUILD_FOLDER=build

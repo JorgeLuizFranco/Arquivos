@@ -37,5 +37,11 @@ void escreve_registro_criminal(FILE* arq_bin, crime_t* crime) {
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
 }
 
+void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho, long long int byteOffset) {
+    desloca_offset(arq_bin, byteOffset);
+    crime->removido = '1';
+    cabecalho->nroRegRem++;
+    escreve_registro_criminal(arq_bin, crime);
+}
 
 

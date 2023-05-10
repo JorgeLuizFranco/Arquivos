@@ -4,7 +4,6 @@
     #include <string.h>
     #include <stdlib.h>
     #include <stdio.h>
-    #include "extras/utils.h"
     #include "registros.h"
 
     typedef struct Cabecalho_indice cabecalho_indice_t;
