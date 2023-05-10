@@ -2,7 +2,7 @@
     #define CAMPOS_H
 
     #include "registros.h"
-    #include "extras/utils.h"
+    #include "utils_structs.h"
     #include <stdio.h>
 
 

@@ -3,9 +3,9 @@
 
     #include <stdio.h>
     #include <stdlib.h>
-    #include "../registros.h"
-    #include "../indices.h"
-    #include "../campos.h"
+    #include "../structs/registros.h"
+    #include "../structs/indices.h"
+    #include "../structs/campos.h"
 
     // Função fornecida
     // Alterei para pegar como entrada o próprio ponteiro para arquivo

@@ -2,7 +2,7 @@
     #define LEITURA_BIN_H
 
     #include <stdio.h>
-    #include "../registros.h"
+    #include "../structs/registros.h"
     #include "../extras/utils.h"
 
     cabecalho_t* le_cabecalho_bin(FILE* arq_bin);

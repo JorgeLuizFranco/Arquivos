@@ -2,7 +2,7 @@
     #define ESCRITA_BIN_IND_H
 
     #include <stdio.h>
-    #include "../indices.h"
+    #include "../structs/indices.h"
     #include "../extras/utils.h"
     #include "leitura_bin.h"
 

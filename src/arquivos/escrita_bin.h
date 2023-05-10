@@ -2,7 +2,7 @@
     #define ESCRITA_BIN_H
 
     #include <stdio.h>
-    #include "../registros.h"
+    #include "../structs/registros.h"
     #include "../extras/utils.h"
 
     void escreve_cabecalho(FILE* arq_bin, cabecalho_t* cabecalho);

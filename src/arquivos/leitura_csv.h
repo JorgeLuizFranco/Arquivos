@@ -3,7 +3,7 @@
 
     #include <stdio.h>
     #include <stdlib.h>
-    #include "../registros.h"
+    #include "../structs/registros.h"
     #include "../extras/stringdinamica.h"
 
     crime_t* le_registro_criminal(FILE* arq_csv);

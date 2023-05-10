@@ -1,5 +1,5 @@
 #include "campos.h"
-
+#include "../extras/utils.h"
 
 campo_busca_t* le_campo_busca() {
     campo_busca_t* campo_atual = (campo_busca_t*) malloc(sizeof(campo_busca_t));
