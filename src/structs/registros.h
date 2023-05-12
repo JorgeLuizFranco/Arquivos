@@ -3,6 +3,7 @@
 
     #include <stdlib.h>
     #include <string.h>
+    #include "./utils_structs.h"
 
     // Documentação em detalhes no .c, que também possui outras funções
     // que servem de base para as colocadas aqui
@@ -34,5 +35,6 @@
 
     void libera_crime(crime_t* crime_atual);
     int tamanho_crime(crime_t* crime);
+    crime_t* copia_crime(crime_t* original);
 
 #endif

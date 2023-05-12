@@ -32,16 +32,19 @@ void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
     }
 }
 
-void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
+int le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
     *num_ind = 0;
-    if (arq_indices == NULL) return;
+    if (arq_indices == NULL) return -1;
 
     le_cabecalho_indice(arq_indices, cabecalho_indice);
 
     if (*cabecalho_indice == NULL || (*cabecalho_indice)->status == '0') {
-        if (*cabecalho_indice != NULL) free(*cabecalho_indice);
-        *cabecalho_indice = NULL;
-        return;
+        if (*cabecalho_indice != NULL) {
+            free(*cabecalho_indice);
+            *cabecalho_indice = NULL;
+            return -2;
+        }
+        return 0;
     }
 
     int num_dados = 0;
@@ -55,7 +58,7 @@ void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_ind
             *cabecalho_indice = NULL;
             libera_vetor_ate_pos(*dados, num_dados-1);
             *dados = NULL;
-            return;
+            return 0;
         }
         void** dados_realloc = (void**) realloc(*dados, (++num_dados)*get_tam_var(tipoVar));
         if (dados_realloc == NULL) {
@@ -64,9 +67,11 @@ void le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_ind
             *cabecalho_indice = NULL;
             libera_vetor_ate_pos(*dados, num_dados-2);
             *dados = NULL;
-            return;
+            return 0;
         }
         *dados = dados_realloc;
         (*dados)[num_dados-1] = dado_atual;
     }
+
+    return 1;
 }

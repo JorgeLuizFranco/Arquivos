@@ -153,40 +153,15 @@ void remove_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 
 void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
 
-    FILE* arq_bin = fopen(nome_arq_bin, "rb+");
-    if (arq_bin == NULL) {
-        erro();
-        return;
-    }
-
-    FILE* arq_idx = fopen(nome_arq_idx, "rb+");
-    if (arq_idx == NULL) {
-        fclose(arq_idx);
-        erro();
-        return;
-    }
-
-    cabecalho_t* cabecalho = le_cabecalho_bin(arq_bin);
-    if (cabecalho == NULL) {
-        fclose(arq_bin);
-        fclose(arq_idx);
-        erro();
-        return;
-    }
-
+    FILE* arq_bin;
+    FILE* arq_idx;
+    cabecalho_t* cabecalho = NULL;
     cabecalho_indice_t* cabecalho_indice = NULL;
     void** dados = NULL;
     int tipoVar = get_tipo_var(tipo_campo);
     int num_ind;
-    le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_ind);
 
-    if (cabecalho_indice == NULL) {
-        fclose(arq_bin);
-        fclose(arq_idx);
-        free(cabecalho);
-        erro();
-        return;
-    }
+    abre_arq_bin_ind(&arq_bin, nome_arq_bin, &arq_idx, nome_arq_idx, &cabecalho, &cabecalho_indice, &dados, tipoVar, &num_ind);
 
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
 
@@ -194,8 +169,7 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     for (int i = 0; i < num_consultas; i++) {
         crime_atual = le_crime_tela();
         if (crime_atual == NULL || insere_crime_binario(arq_bin, nome_campo, &dados, tipoVar, &num_ind, cabecalho->proxByteOffset, crime_atual) == 0) {
-            free(cabecalho);
-            free(cabecalho_indice);
+            libera_vars(2, (void*)cabecalho, (void*)cabecalho_indice);
             fclose(arq_bin);
             fclose(arq_idx);
             erro();
@@ -215,11 +189,14 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     escreve_cabecalho_ind(arq_idx, cabecalho_indice);
     escreve_dados_gen(arq_idx, dados, tipoVar, cabecalho_indice->nro_reg);
 
-    free(cabecalho);
-    free(cabecalho_indice);
+    libera_vars(2, (void*)cabecalho, (void*)cabecalho_indice);
     fclose(arq_bin);
     fclose(arq_idx);
 
     binarioNaTela(nome_arq_bin);
     binarioNaTela(nome_arq_idx);
+}
+
+void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
+    realiza_consultas(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas, 7);
 }

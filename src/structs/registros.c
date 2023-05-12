@@ -28,3 +28,31 @@ int tamanho_crime(crime_t* crime) {
     return tamanho_atual;
 }
 
+crime_t* copia_crime(crime_t* original) {
+    if (original == NULL) return NULL;
+
+    crime_t* copia = (crime_t*) malloc(sizeof(crime_t));
+    if (copia == NULL) return NULL;
+
+    copia->idCrime = original->idCrime;
+    copia->numeroArtigo = original->numeroArtigo;
+    copia_array_char(copia->dataCrime, original->dataCrime, 10);
+    copia_array_char(copia->marcaCelular, original->marcaCelular, 12);
+    
+    copia->descricaoCrime = NULL;
+    copia->lugarCrime = NULL;
+
+    copia->descricaoCrime = (char*) malloc(sizeof(char)*(strlen(original->descricaoCrime)+1));
+    if (copia->descricaoCrime == NULL) {
+        libera_crime(copia);
+        return NULL;
+    }
+
+    copia->lugarCrime = (char*) malloc(sizeof(char)*(strlen(original->lugarCrime)+1));
+    if (copia->lugarCrime == NULL) {
+        libera_crime(copia);
+        return NULL;
+    }
+
+    return copia;
+}

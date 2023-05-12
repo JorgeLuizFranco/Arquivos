@@ -23,3 +23,8 @@ int compara_string_limitada(char* s1, char* s2, int tamanho, int flag_s2_dinamic
     }
 
 }
+
+void copia_array_char(char* dest, char* src, int tamanho) {
+    for (int i = 0; i < tamanho; i++)
+        dest[i] = src[i];
+}

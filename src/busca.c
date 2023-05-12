@@ -133,17 +133,24 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             return;
         }
 
-        // sera que tem o campo do arquivo de indice?
-        int flag_campo_procurado = 0;
-        for (int j = 0; j < num_campos; j++) {
-            if (strcmp(campos[j]->campo_busca, nome_campo) == 0) {
-                flag_campo_procurado = j+1;
-                break;
+        int num_campos_atualizar;
+        campo_busca_t** campos_atualizar;
+
+        if (funcionalidade == 7) {
+            scanf("%d", &num_campos_atualizar);
+            campos_atualizar = le_campos_busca(num_campos_atualizar);
+            if (campos_atualizar == NULL) {
+                libera_memo_consultas(1, arq_bin, cabecalho, arq_idx, cabecalho_indice, campos, -1, dados, num_indices);
+                return;
             }
-        }
+        } 
+
+        // sera que tem o campo do arquivo de indice?
+        int flag_campo_procurado = checa_campo_procurado(campos, num_campos, nome_campo);
+        int flag_campo_atualiza = checa_campo_procurado(campos_atualizar, num_campos_atualizar, nome_campo);
         // se nao tiver ou nem existir indice, fazer uma busca linear no arquivo binario
 
-        if (cabecalho_indice == NULL || (cabecalho_indice != NULL && flag_campo_procurado == 0)) {
+        if (cabecalho_indice == NULL || flag_campo_procurado == -1) {
             long long int byteOffset = TAMANHO_CABECALHO;
             while (byteOffset < cabecalho->proxByteOffset) {
                 crime_atual = le_crime_bin(arq_bin);
@@ -162,6 +169,21 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         // procurar no arquivo de índices o registro atual e remove-lo por shiftacao
                         int ind_arquivo = indice_procura_registro(crime_atual, byteOffset, dados, num_indices, nome_campo, tipoVar);
                         remove_com_shift(&dados, tipoVar, &num_indices, ind_arquivo, cabecalho_indice);
+                    } else if (funcionalidade == 7) {
+
+                        crime_t* crime_atualizado = copia_crime(crime_atual);
+                        if (crime_atualizado == NULL || atualiza_registro(crime_atualizado, campos_atualizar, num_campos_atualizar) == 0) {
+                            libera_crime(crime_atualizado);
+                            libera_crime(crime_atual);
+                            libera_memo_consultas(1, arq_bin,  cabecalho, arq_idx, cabecalho_indice, campos, num_campos, dados, num_indices);
+                            return;
+                        }
+
+                        if (tamanho_crime(crime_atualizado) <= tamanho_crime(crime_atual)) {
+                            if (flag_campo_atualiza == -1) {
+                                
+                            }
+                        }
                     }
                 }
 
@@ -177,7 +199,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             int low;
             int high;
             long long int byteOffset;
-            void* chaveBusca = tipoVar == 0 ? (void*)&(campos[flag_campo_procurado-1]->chaveBuscaInt) : (void*)(campos[flag_campo_procurado-1]->chaveBuscaStr);
+            void* chaveBusca = tipoVar == 0 ? (void*)&(campos[flag_campo_procurado]->chaveBuscaInt) : (void*)(campos[flag_campo_procurado]->chaveBuscaStr);
             busca_bin_campos(dados, num_indices, &low, &high, chaveBusca, tipoVar, 1);
             while (low <= high) {
                 

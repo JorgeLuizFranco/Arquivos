@@ -121,3 +121,50 @@ void desloca_offset(FILE* arq_bin, long long int byteOffset) {
     long long int posicao = ftell(arq_bin);
     fseek(arq_bin, byteOffset - posicao, SEEK_CUR);
 }
+
+int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* nome_arq_idx, cabecalho_t** cabecalho, cabecalho_indice_t** cabecalho_indice, void*** dados, int tipoVar, int* num_ind) {
+    *arq_bin = fopen(nome_arq_bin, "rb+");
+    if (*arq_bin == NULL) {
+        erro();
+        return 0;
+    }
+
+    *arq_idx = fopen(nome_arq_idx, "rb+");
+    if (*arq_idx == NULL) {
+        fclose(*arq_idx);
+        erro();
+        return 0;
+    }
+
+    *cabecalho = le_cabecalho_bin(arq_bin);
+    if (*cabecalho == NULL) {
+        fclose(*arq_bin);
+        fclose(*arq_idx);
+        erro();
+        return 0;
+    }
+
+    *cabecalho_indice = NULL;
+    *dados = NULL;
+    if (le_arq_indices(*arq_idx, dados, tipoVar, cabecalho_indice, num_ind) == 0) {
+        fclose(*arq_bin);
+        fclose(*arq_idx);
+        free(*cabecalho);
+        return 0;
+    }
+
+    return 1;
+}
+
+void libera_vars(int qnt, ...) {
+    va_list lista_args;
+    int j = 0;
+
+    va_start(lista_args, qnt);
+
+    for (j = 0; j < qnt; j++) {
+        free(va_arg(lista_args, void*));
+    }
+
+    va_end(lista_args);
+}
