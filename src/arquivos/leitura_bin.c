@@ -55,7 +55,7 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     crime_t* crime = (crime_t*) malloc(sizeof(crime_t));
 
     if (crime == NULL) return NULL;
-    char delimitador;
+    char delimitador = '$';
 
     fread(&(crime->removido), sizeof(char), 1, arq_bin);
     fread(&(crime->idCrime), sizeof(int), 1, arq_bin);
@@ -66,7 +66,9 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     le_campo_variavel_crime(&(crime->lugarCrime), arq_bin, '|');
     le_campo_variavel_crime(&(crime->descricaoCrime), arq_bin, '|');
 
-    fread(&delimitador, sizeof(char), 1, arq_bin); // #
+    // ler lixo ($), apenas para avançar o ponteiro
+    while (delimitador != '#')
+        fread(&delimitador, sizeof(char), 1, arq_bin); // $ ou #
 
     return crime;
 }
