@@ -1,6 +1,8 @@
 #ifndef BUSCA_H
     #define BUSCA_H
 
+    // comentado no .c
+
     #include "./extras/utils.h"
     #include "./arquivos/leitura_bin.h"
     #include "./arquivos/escrita_bin.h"
