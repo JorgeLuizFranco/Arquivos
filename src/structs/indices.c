@@ -1,5 +1,12 @@
 #include "indices.h"
 
+
+/**
+ * cria cabeçalho do arquivo de índices
+ * 
+ * @param status determina se está sendo realizada uma operação no arquivo: '0' ou '1'
+ * @param arq_ind ponteiro para o arquivo de índices
+*/
 cabecalho_indice_t* cria_cabecalho_indice(char status, int nro_reg) {
     cabecalho_indice_t* cabecalho_indice = (cabecalho_indice_t*) malloc(sizeof(cabecalho_indice_t));
     if (cabecalho_indice == NULL) return NULL;

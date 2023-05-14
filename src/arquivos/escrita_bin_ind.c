@@ -1,5 +1,11 @@
 #include "escrita_bin_ind.h"
 
+/**
+ * escreve cabeçalho do arquivo de índices
+ * 
+ * @param arq_indices ponteiro para o arquivo de índices
+ * @param arq_ind ponteiro para a struct de cabeçalho
+*/
 void escreve_cabecalho_ind(FILE* arq_indices, cabecalho_indice_t* dados_cabecalho) {
     fwrite(&(dados_cabecalho->status), sizeof(char), 1, arq_indices);
     fwrite(&(dados_cabecalho->nro_reg), sizeof(int), 1, arq_indices);
@@ -32,8 +38,21 @@ void escreve_dados_gen(FILE* arq_indices, void** vetor_dados, int tipoVar, int t
         escreve_dados_str(arq_indices, (dados_str_t**)vetor_dados, tamanho_vetor);
 }
 
-void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros, long long int cab_byteOffset) {
+/**
+ * Escreve o arquivo de índices
+ * 
+ * @param arq_bin ponteiro para o arquivo de dados
+ * @param arq_ind ponteiro para o arquivo de índices
+ * @param nome_campo string que define nome do campo ( ex: idCrime)
+ * @param tipo_campo 'string' ou 'int' é o tipo do campo especificado
+ * @param nome_arq_ind nome do arquivo binário de índices de destino
+ * @param nro_registros numero de registros
+ * @param byteOffset_reg byteOffset do arquivo 
+*/
 
+void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros, long long int byteOffset_reg) {
+
+    // cria cabeçalho com status '0' e 0 registros
     cabecalho_indice_t* cabecalho_ind = cria_cabecalho_indice('0', 0);
     if (cabecalho_ind == NULL) {
         erro();
@@ -55,7 +74,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     void* dado_atual;
     crime_t* crime_atual;
 
-    while (byteOffset < cab_byteOffset) {
+    while (byteOffset < byteOffset_reg) {
         crime_atual = le_crime_bin(arq_bin);
 
         if (crime_atual == NULL) {
