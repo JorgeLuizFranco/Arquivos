@@ -8,7 +8,7 @@
     #include "./arquivos/leitura_csv.h"
     #include "./arquivos/leitura_bin_ind.h"
     #include "./extras/utils.h"
-    #include "busca.h"
+    #include "consultas.h"
     #include "insercao.h"
 
     

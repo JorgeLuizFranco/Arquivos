@@ -25,6 +25,16 @@ int compara_string_limitada(char* s1, char* s2, int tamanho, int flag_s2_dinamic
 }
 
 void copia_array_char(char* dest, char* src, int tamanho) {
-    for (int i = 0; i < tamanho; i++)
+    int i = 0;
+    for (; i < tamanho && src[i] != '\0'; i++)
         dest[i] = src[i];
+    
+    for (; i < tamanho; i++)
+        dest[i] = '$';
+}
+
+void troca(void** var1, void** var2) {
+    void* temp = *var1;
+    *var1 = *var2;
+    *var2 = temp;
 }

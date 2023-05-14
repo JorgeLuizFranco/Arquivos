@@ -193,3 +193,33 @@ size_t get_tam_var(int tipoVar) {
     if (tipoVar == 0) return sizeof(dados_int_t*);
     return sizeof(dados_str_t*);
 }
+
+int atualiza_dado(void** vetor_dados, int tipoVar, int tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset) {
+    if (tipoVar == 0) {
+        ((dados_int_t*)(vetor_dados[pos_dado]))->chaveBusca = *((int*)nova_chave_busca);
+        ((dados_int_t*)(vetor_dados[pos_dado]))->byteOffset = novo_byte_offset;
+    } else {
+        copia_array_char(((dados_str_t*)(vetor_dados[pos_dado]))->chaveBusca, (char*)nova_chave_busca, 12);
+        ((dados_str_t*)(vetor_dados[pos_dado]))->byteOffset = novo_byte_offset;
+    }
+
+    int pos_final = pos_dado;
+
+    for (int i = pos_dado+1; i < tam_vetor; i++)
+        if (compara_dados_gen(vetor_dados[i], vetor_dados[i-1], tipoVar) < 0) {
+            troca(&vetor_dados[i], &vetor_dados[i-1]);
+            pos_final = i;
+        } else {
+            break;
+        }
+    
+    for (int i = pos_dado-1; i>= 0; i--)
+        if (compara_dados_gen(vetor_dados[i], vetor_dados[i+1], tipoVar) > 0) {
+            troca(&vetor_dados[i], &vetor_dados[i+1]);
+            pos_final = i;
+        } else {
+            break;
+        }
+    
+    return pos_final;
+}

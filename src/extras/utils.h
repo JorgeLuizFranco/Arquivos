@@ -7,6 +7,8 @@
     #include "../structs/registros.h"
     #include "../structs/indices.h"
     #include "../structs/campos.h"
+    #include "../arquivos/leitura_bin.h"
+    #include "../arquivos/leitura_bin_ind.h"
 
     // Função fornecida
     // Alterei para pegar como entrada o próprio ponteiro para arquivo

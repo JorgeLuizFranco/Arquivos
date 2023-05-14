@@ -136,7 +136,7 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
         return 0;
     }
 
-    *cabecalho = le_cabecalho_bin(arq_bin);
+    *cabecalho = le_cabecalho_bin(*arq_bin);
     if (*cabecalho == NULL) {
         fclose(*arq_bin);
         fclose(*arq_idx);
