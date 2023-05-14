@@ -89,6 +89,8 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
             insere_dado_ordenado(&dados, tipoVar, num_indices, dado_crime);
             libera_crime(crime_atualizado);
             free(dado_crime_antes);
+            // lembrando que se eu cheguei nessa situação, é porque nem tava no arquivo de índices
+            // o que significa que nem preciso me importar com a flag_nova_pos
             return 1;
         } else {
             // Se o dado era nulo e continua nulo, o codigo a seguir nao faz nada
