@@ -23,6 +23,8 @@
         char* descricaoCrime;
 
         // Campo auxiliar
+        // Basicamente, ele contém o tamanho que o crime realmente ocupa
+        // no arquivo binário, ou seja, até o #
         int tamanho_real;
     };
 

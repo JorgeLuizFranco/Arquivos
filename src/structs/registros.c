@@ -12,8 +12,9 @@ void libera_crime(crime_t* crime_atual) {
 }
 
 /**
- * Calcula o tamanho em bytes que um registro ocupa no binário
+ * Calcula o tamanho em bytes que um registro ocupa(ria) no binário
  *
+ * Não leva em conta os $ entre o último | e o #. Para isso, se usa crime->tamanho_real
  * @param crime Pointeiro para o crime
  * @return o tamanho em bytes do crime
  */
@@ -28,6 +29,15 @@ int tamanho_crime(crime_t* crime) {
     return tamanho_atual;
 }
 
+/**
+ * 
+ * Dado um ponteiro para um crime, aloca memória para outro crime,
+ * faz as propriedades deles serem as mesmas e retorna o endereço
+ * da região alocada
+ * 
+ * @param original ponteiro para crime que sera copiado
+ * @return ponteiro para crime copiado
+*/
 crime_t* copia_crime(crime_t* original) {
     if (original == NULL) return NULL;
 
@@ -60,6 +70,9 @@ crime_t* copia_crime(crime_t* original) {
     copia_array_char(copia->lugarCrime, original->lugarCrime, strlen(original->lugarCrime));
     copia->lugarCrime[(int)strlen(original->lugarCrime)] = '\0';
 
+    // levando em conta a funcionalidade de update, o tamanho real que essa copia ira ocupar
+    // vai ser tamamho_crime(copia) se for inserida no final e o tamanho que era ocupada pela 
+    // original caso contrário
     copia->tamanho_real = tamanho_crime(copia) <= original->tamanho_real ? original->tamanho_real : tamanho_crime(copia);
 
     return copia;
