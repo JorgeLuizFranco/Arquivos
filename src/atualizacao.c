@@ -1,6 +1,56 @@
 #include "atualizacao.h"
 
-// basicamente esse arquivo so foi criado para essa função não ficar jogada
+// basicamente esse arquivo so foi criado para essas duas funções não ficarem jogadas
+
+/**
+ * @param vetor_dados vetor de registros de indice genéricos
+ * @param tipoVar 0 se int, 1 se string
+ * @param tam_vetor ponteiro para o tamanho desse vetor
+ * @param pos_dado posição a ser atualizada
+ * @param nova_chave_busca novo valor para chave de busca
+ * @param novo_byte_offset novo valor para o byteoffset
+ * 
+ * @return numero >= 0 indicando a nova posição após a atualização OU
+ *         -1 se a posição que se quer atualizar é -1 OU
+ *         -2 se atualizei para um registro com chave de busca NULO (nesse caso, automaticamente ja remove do vetor)
+*/
+int atualiza_dado(void** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset) {
+
+    if (pos_dado == -1) return -1;
+
+    if (tipoVar == 0) {
+        ((dados_int_t*)(vetor_dados[pos_dado]))->chaveBusca = *((int*)nova_chave_busca);
+        ((dados_int_t*)(vetor_dados[pos_dado]))->byteOffset = novo_byte_offset;
+    } else {
+        copia_array_char(((dados_str_t*)(vetor_dados[pos_dado]))->chaveBusca, (char*)nova_chave_busca, 12);
+        ((dados_str_t*)(vetor_dados[pos_dado]))->byteOffset = novo_byte_offset;
+    }
+
+    if (checa_dado_nulo(vetor_dados[pos_dado], tipoVar)) {
+        remove_dado(&vetor_dados, tipoVar, tam_vetor, pos_dado);
+        return -2;
+    }
+
+    int pos_final = pos_dado;
+
+    for (int i = pos_dado+1; i < *tam_vetor; i++)
+        if (compara_dados_gen(vetor_dados[i], vetor_dados[i-1], tipoVar) < 0) {
+            troca(&vetor_dados[i], &vetor_dados[i-1]);
+            pos_final = i;
+        } else {
+            break;
+        }
+    
+    for (int i = pos_dado-1; i>= 0; i--)
+        if (compara_dados_gen(vetor_dados[i], vetor_dados[i+1], tipoVar) > 0) {
+            troca(&vetor_dados[i], &vetor_dados[i+1]);
+            pos_final = i;
+        } else {
+            break;
+        }
+    
+    return pos_final;
+}
 
 /**
  * Atualiza um registro criminal e faz as alterações necessárias no arquivo binário de
@@ -110,3 +160,5 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
     free(dado_crime);
     return 1;
 }
+
+

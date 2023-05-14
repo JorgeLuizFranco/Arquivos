@@ -1,12 +1,15 @@
 #ifndef INDICES_H
     #define INDICES_H
 
+    // mais detalhes no .c
+
     #include <string.h>
     #include <stdlib.h>
     #include <stdio.h>
     #include "registros.h"
     #include "utils_structs.h"
 
+    // definição de struct de cabeçalho de arquivo de índices
     typedef struct Cabecalho_indice cabecalho_indice_t;
     struct Cabecalho_indice {
         char status;
@@ -15,6 +18,7 @@
 
     cabecalho_indice_t* cria_cabecalho_indice(char status, int nro_reg);
 
+    // struct de registro de índice do tipo inteiro
     typedef struct Dados_inteiro dados_int_t;
     struct Dados_inteiro {
         int chaveBusca;
@@ -24,6 +28,7 @@
     void ordena_dados_int(dados_int_t** vetor_dados_int, int tamanho_vetor);
     dados_int_t* cria_dados_int(int chaveBusca, long long int byteOffset);
 
+    // struct de registro de índice do tipo string
     typedef struct Dados_string dados_str_t;
     struct Dados_string {
         char chaveBusca[12];
@@ -54,8 +59,6 @@
     size_t get_tam_var(int tipoVar);
 
     int compara_dados_gen(void* esquerda, void* direita, int tipoVar);
-
-    int atualiza_dado(void** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset);
 
     int checa_dado_nulo(void* dado, int tipoVar);
 
