@@ -8,6 +8,10 @@
 #include "funcionalidades.h"
 
 int main() {
+    // le a primeira linha da entrada do usuário e chama a funcionalidade
+    // correspondente
+    // as funções estão em funcionalidades.c
+    
     int funcao;
     char nome_arq_csv[100];
     char nome_arq_bin[100];
