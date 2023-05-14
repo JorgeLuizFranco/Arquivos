@@ -112,7 +112,7 @@ void mostra_crimes_tela(char* nome_arq_bin) {
 */
 void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_ind) {
 
-    FILE* arq_bin = fopen(nome_arq_bin, "rb"); // arquivo de registros
+    FILE* arq_bin = fopen(nome_arq_bin, "rb"); // arquivo de registros. só vou ler
     if (arq_bin == NULL) {
         erro();
         return;
@@ -120,14 +120,16 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 
     cabecalho_t* cabecalho = le_cabecalho_bin(arq_bin);
     if (cabecalho == NULL || cabecalho->status == '0') {
+        if (cabecalho != NULL) free(cabecalho);
         fclose(arq_bin);
         erro();
         return;
     }
 
-    int n_registros = cabecalho->nroRegArq - cabecalho->nroRegRem;
+    // número de registro nao removidos
+    int n_registros = cabecalho->nroRegArq - cabecalho->nroRegRem; 
 
-    FILE* arq_ind = fopen(nome_arq_ind, "wb");
+    FILE* arq_ind = fopen(nome_arq_ind, "wb"); // arquivo de índices. só vou escrever
     if (arq_ind == NULL) {
         fclose(arq_bin);
         free(cabecalho);
@@ -135,24 +137,60 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         return;
     }
 
+    // depois de abrir arquivos, chama função implementada em escrita_bin_ind.c
     escreve_arq_ind(arq_bin, arq_ind, nome_campo, tipo_campo, n_registros, cabecalho->proxByteOffset);
 
+    // desalocações de memória, fechamento dos arquivos
     free(cabecalho);
     fclose(arq_bin);
     fclose(arq_ind);
-    binarioNaTela(nome_arq_ind);
+
+    binarioNaTela(nome_arq_ind); // função pedida para ser executada
 }
 
+/**
+ * FUNCIONALIDADE 4
+ * Procura e mostra registros que satisfazem consultas
+ * 
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo do registro 'crime'
+ * @param tipo_campo 'string' ou 'int' é o tipo do campo especificado
+ * @param nome_arq_ind nome do arquivo binário de índices de destino
+ * @param num_consultas número de consultas a se fazer
+*/
 void procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
+    // Especifico que quero aplicar a funcionalidade 4
     realiza_consultas(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas, 4);
 }
 
+/**
+ * FUNCIONALIDADE 5
+ * Remove registros que satisfazem consultas
+ * 
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo do registro 'crime'
+ * @param tipo_campo 'string' ou 'int' é o tipo do campo especificado
+ * @param nome_arq_ind nome do arquivo binário de índices de destino
+ * @param num_consultas número de consultas a se fazer
+*/
 void remove_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
+    // Especifico que quero aplicar a funcionalidade 5
     realiza_consultas(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas, 5);
 }
 
+/**
+ * FUNCIONALIDADE 6
+ * Insere registros
+ * 
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo do registro 'crime'
+ * @param tipo_campo 'string' ou 'int' é o tipo do campo especificado
+ * @param nome_arq_ind nome do arquivo binário de índices de destino
+ * @param num_consultas número de registros que o usuário vai escrever e colocar no arquivo de índices e no binário
+*/
 void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
 
+    // declara variáveis a serem usadas
     FILE* arq_bin;
     FILE* arq_idx;
     cabecalho_t* cabecalho = NULL;
@@ -161,14 +199,21 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     int tipoVar = get_tipo_var(tipo_campo);
     int num_ind;
 
+    // função para abrir o arquivo binário e o arquivo de índices que detecta se ocorreu erro
     if (abre_arq_bin_ind(&arq_bin, nome_arq_bin, &arq_idx, nome_arq_idx, &cabecalho, &cabecalho_indice, &dados, tipoVar, &num_ind) == 0)
         return;
 
+    // enquanto uso o arquivo, deixo status como 0
+    cabecalho->status = '0';
+    escreve_cabecalho(arq_bin, cabecalho);
+
+    // dou fseek para o final porque insercao eh no final do arquivo
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
 
     crime_t* crime_atual;
     for (int i = 0; i < num_consultas; i++) {
-        crime_atual = le_crime_tela();
+        crime_atual = le_crime_tela(); // leio da tela a consulta atual
+        // se ocorrer algum erro de alocação em algum ponto no código (inclusive ao tentar inserir), aborto
         if (crime_atual == NULL || insere_crime_binario(arq_bin, cabecalho, cabecalho_indice, nome_campo, &dados, tipoVar, &num_ind, crime_atual) == 0) {
             libera_vars(2, (void*)cabecalho, (void*)cabecalho_indice);
             fclose(arq_bin);
@@ -179,21 +224,37 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         libera_crime(crime_atual);
     }
 
+    // finaliza a escrita do arquivo binário
     desloca_offset(arq_bin, 0);
+    cabecalho->status = '1';
     escreve_cabecalho(arq_bin, cabecalho);
-
-    desloca_offset(arq_idx, 0);
-    escreve_cabecalho_ind(arq_idx, cabecalho_indice);
-    escreve_dados_gen(arq_idx, dados, tipoVar, cabecalho_indice->nro_reg);
-
-    libera_vars(2, (void*)cabecalho, (void*)cabecalho_indice);
+    free(cabecalho);
     fclose(arq_bin);
+
+    // finaliza a escrita do arquivo de índices
+    desloca_offset(arq_idx, 0);
+    cabecalho_indice->status = '1';
+    escreve_cabecalho_ind(arq_idx, cabecalho_indice);
+    free(cabecalho_indice);
+    escreve_dados_gen(arq_idx, dados, tipoVar, cabecalho_indice->nro_reg);
     fclose(arq_idx);
 
+    // mostra o que e pedido na tela
     binarioNaTela(nome_arq_bin);
     binarioNaTela(nome_arq_idx);
 }
 
+/**
+ * FUNCIONALIDADE 7
+ * Atualiza registros
+ * 
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo do registro 'crime'
+ * @param tipo_campo 'string' ou 'int' é o tipo do campo especificado
+ * @param nome_arq_ind nome do arquivo binário de índices de destino
+ * @param num_consultas número de atualizações que o usuário fará
+*/
 void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx, int num_consultas) {
+    // Especifico que quero aplicar a funcionalidade 7
     realiza_consultas(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas, 7);
 }

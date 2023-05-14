@@ -122,6 +122,7 @@ void desloca_offset(FILE* arq_bin, long long int byteOffset) {
     fseek(arq_bin, byteOffset - posicao, SEEK_CUR);
 }
 
+// Abre arquivo binário e de índices
 int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* nome_arq_idx, cabecalho_t** cabecalho, cabecalho_indice_t** cabecalho_indice, void*** dados, int tipoVar, int* num_ind) {
     *arq_bin = fopen(nome_arq_bin, "rb+");
     if (*arq_bin == NULL) {
@@ -137,16 +138,17 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
     }
 
     *cabecalho = le_cabecalho_bin(*arq_bin);
-    if (*cabecalho == NULL) {
+    if (*cabecalho == NULL || (*cabecalho)->status == '0') {
+        if (*cabecalho != NULL) free(*cabecalho);
         fclose(*arq_bin);
         fclose(*arq_idx);
         erro();
         return 0;
     }
-
+    
     *cabecalho_indice = NULL;
     *dados = NULL;
-    if (le_arq_indices(*arq_idx, dados, tipoVar, cabecalho_indice, num_ind) == 0) {
+    if (le_arq_indices(*arq_idx, dados, tipoVar, cabecalho_indice, num_ind) <= 0) {
         fclose(*arq_bin);
         fclose(*arq_idx);
         free(*cabecalho);
