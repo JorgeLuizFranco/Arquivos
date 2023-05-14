@@ -203,9 +203,16 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     if (abre_arq_bin_ind(&arq_bin, nome_arq_bin, &arq_idx, nome_arq_idx, &cabecalho, &cabecalho_indice, &dados, tipoVar, &num_ind) == 0)
         return;
 
-    // enquanto uso o arquivo, deixo status como 0
+    // enquanto uso os arquivos, deixo status como 0
+    // faço isso pro arquivo binário
+    desloca_offset(arq_bin, 0);
     cabecalho->status = '0';
     escreve_cabecalho(arq_bin, cabecalho);
+    // faço isso pro arquivo de índices
+    desloca_offset(arq_idx, 0);
+    cabecalho_indice->status = '0';
+    escreve_cabecalho_ind(arq_idx, cabecalho_indice);
+
 
     // dou fseek para o final porque insercao eh no final do arquivo
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
