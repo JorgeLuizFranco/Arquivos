@@ -1,6 +1,8 @@
 #ifndef IO_CRIMES_H
     #define IO_CRIMES_H
 
+    // comentado no .c
+
     #include <stdio.h>
     #include "../arquivos/leitura_bin.h"
     #include "../extras/utils.h"

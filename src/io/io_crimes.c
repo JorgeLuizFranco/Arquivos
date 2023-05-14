@@ -1,5 +1,7 @@
 #include "io_crimes.h"
 
+// arquivo com funcoes pra printar crimes ou ler da entrada
+
 /**
 *
 * Imprime uma string delimitada por caractere ou delimitada por tamanho.
@@ -91,6 +93,14 @@ void mostra_crimes_tela_arq(FILE* arq_bin, int n_registros) {
     }
 }
 
+/**
+ * copia src para dest, com limitação de tamanho
+ *
+ * @param dest string de destino
+ * @param src string de origem
+ * @param tamanho so checa ate esse tamanho
+ * @return sempre retorna 1
+ */
 int copia_str_limitada(char* dest, char* src, int tamanho) {
     for (int i = 0; i < tamanho; i++)
         dest[i] = src[i];
@@ -98,6 +108,14 @@ int copia_str_limitada(char* dest, char* src, int tamanho) {
     return 1;
 }
 
+/**
+ * copia src para *dest, sem limitação de tamanho (quero dizer que lida com strings
+ * com \0), apos alocar espaco para *dest
+ *
+ * @param dest string de destino
+ * @param src string de origem
+ * @return 0 se ocorre erro de alocação; 1 caso contrário
+ */
 int copia_str_ilimitada(char** dest, char* src) {
     *dest = (char*) malloc(sizeof(char)*(1+(int)strlen(src)));
     if (*dest == NULL) return 0;
@@ -105,6 +123,11 @@ int copia_str_ilimitada(char** dest, char* src) {
     return copia_str_limitada(*dest, src, 1+(int)strlen(src));
 }
 
+/**
+ * lê crime da entrada padrão
+ *
+ * @return ponteiro para crime alocado com dados digitados pelo usuário
+ */
 crime_t* le_crime_tela() {
     char string_lida[100];
     crime_t* crime = (crime_t*) malloc(sizeof(crime_t));
