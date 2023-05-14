@@ -194,7 +194,7 @@ size_t get_tam_var(int tipoVar) {
     return sizeof(dados_str_t*);
 }
 
-int atualiza_dado(void** vetor_dados, int tipoVar, int tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset) {
+int atualiza_dado(void** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset) {
 
     if (pos_dado == -1) return -1;
 
@@ -206,9 +206,14 @@ int atualiza_dado(void** vetor_dados, int tipoVar, int tam_vetor, int pos_dado, 
         ((dados_str_t*)(vetor_dados[pos_dado]))->byteOffset = novo_byte_offset;
     }
 
+    if (checa_dado_nulo(vetor_dados[pos_dado], tipoVar)) {
+        remove_dado(&vetor_dados, tipoVar, tam_vetor, pos_dado);
+        return -2;
+    }
+
     int pos_final = pos_dado;
 
-    for (int i = pos_dado+1; i < tam_vetor; i++)
+    for (int i = pos_dado+1; i < *tam_vetor; i++)
         if (compara_dados_gen(vetor_dados[i], vetor_dados[i-1], tipoVar) < 0) {
             troca(&vetor_dados[i], &vetor_dados[i-1]);
             pos_final = i;

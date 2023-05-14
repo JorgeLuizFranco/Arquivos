@@ -77,14 +77,14 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
             }
             if (checa_dado_nulo(dado_atual, tipoVar)) {
                 free(dado_atual);
-                byteOffset += tamanho_crime(crime_atual);
+                byteOffset += crime_atual->tamanho_real;
                 libera_crime(crime_atual);
                 continue;
             }
             vetor_dados[cabecalho_ind->nro_reg++] = dado_atual;
         }
         
-        byteOffset += tamanho_crime(crime_atual);
+        byteOffset += crime_atual->tamanho_real;
         libera_crime(crime_atual); // libera memória alocada
     }
 

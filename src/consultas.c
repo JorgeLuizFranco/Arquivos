@@ -35,8 +35,6 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
 
     for (int i = 0; i < num_consultas; i++) {
 
-        fprintf(stderr, "%d\n", i);
-
         int regs_mostrados = 0;
         if (funcionalidade == 4)
             printf("Resposta para a busca %d\n", i+1);
@@ -68,7 +66,6 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         // se o campo do indice nao tiver entre os campos especificados pela query, fazer uma busca linear no arquivo binario
         
         if (flag_campo_procurado == -1) {
-            fprintf(stderr, "aquii\n");
             long long int byteOffset = TAMANHO_CABECALHO;
             long long int byteOffsetFinal = cabecalho->proxByteOffset;
             while (byteOffset < byteOffsetFinal) {
@@ -89,14 +86,9 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         int ind_arquivo = indice_procura_registro(crime_atual, byteOffset, dados, num_indices, nome_campo, tipoVar);
                         remove_com_shift(&dados, tipoVar, &num_indices, ind_arquivo, cabecalho_indice);
                     } else if (funcionalidade == 7) {
-                        fprintf(stderr, "removendo %lld %d\n", byteOffset, crime_atual->tamanho_real);
-                        mostra_crime_tela(crime_atual);
                         atualizar(arq_bin, cabecalho, crime_atual, byteOffset, arq_idx, cabecalho_indice, 
                                   campos_atualizar, num_campos_atualizar, flag_campo_atualiza, 
-                                  campos, num_campos, nome_campo, dados, num_indices, tipoVar, NULL);
-                        desloca_offset(arq_bin, byteOffset);
-                        crime_atual = le_crime_bin(arq_bin);
-                        mostra_crime_tela(crime_atual);
+                                  campos, num_campos, nome_campo, dados, &num_indices, tipoVar, NULL);
                     }
                 }
 
@@ -115,7 +107,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             void* chaveBusca = tipoVar == 0 ? (void*)&(campos[flag_campo_procurado]->chaveBuscaInt) : (void*)(campos[flag_campo_procurado]->chaveBuscaStr);
             busca_bin_campos(dados, num_indices, &low, &high, chaveBusca, tipoVar, 1);
             while (low <= high) {
-                
+
                 void* dado_atual = dados[low];
                 byteOffset = pega_offset_generico(dado_atual, tipoVar);
                 crime_atual = le_crime_bin_offset(arq_bin, byteOffset);
@@ -136,18 +128,20 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         high--;
                     } else if (funcionalidade == 7) {
                         int flag_nova_pos;
-                        mostra_crime_tela(crime_atual);
                         atualizar(arq_bin, cabecalho, crime_atual, byteOffset, arq_idx, cabecalho_indice, 
                                   campos_atualizar, num_campos_atualizar, flag_campo_atualiza, 
-                                  campos, num_campos, nome_campo, dados, num_indices, tipoVar, &flag_nova_pos);
-                        desloca_offset(arq_bin, byteOffset);
-                        crime_atual = le_crime_bin(arq_bin);
-                        mostra_crime_tela(crime_atual);
+                                  campos, num_campos, nome_campo, dados, &num_indices, tipoVar, &flag_nova_pos);
+                        
                         if (flag_nova_pos <= low) {
                             // se igual: faco nada
                             // se menor:
                             // low agora aponta para um cara anteior; mas sera incrementado no fim do loop, levando ao proximo cara
                             // entao nao faco nada
+                            // se igual a -1, ignora
+                            if (flag_nova_pos == -2) {
+                                low--;
+                                high--; // ocorreu remocao
+                            }
                         } else {
                             // se chegou aqui, flag > low
                             // isso quer dizer que aumentou a posicao

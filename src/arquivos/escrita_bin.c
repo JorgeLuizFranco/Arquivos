@@ -38,7 +38,6 @@ void escreve_registro_criminal(FILE* arq_bin, crime_t* crime) {
 }
 
 void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho, long long int byteOffset) {
-    desloca_offset(arq_bin, byteOffset);
     crime->removido = '1';
     cabecalho->nroRegRem++;
     sobrescreve_crime(arq_bin, byteOffset, crime->tamanho_real, crime);
@@ -65,7 +64,7 @@ void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crim
     // aqui tem lixo
     delimitador = '$';
     int tamanho_crime_novo = tamanho_crime(crime_novo);
-    for (int i = tamanho_crime_antigo; i < tamanho_crime_novo; i++)
+    for (int i = tamanho_crime_novo; i < tamanho_crime_antigo; i++)
         fwrite(&delimitador, sizeof(char), 1, arq_bin);
 
     delimitador = '#';

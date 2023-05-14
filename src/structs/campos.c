@@ -111,6 +111,7 @@ int atualiza_campo(crime_t* crime_atual, campo_busca_t* campo_atual) {
         if (*string_dinamica_original == NULL) return 0;
 
         copia_array_char(*string_dinamica_original, campo_atual->chaveBuscaStr, (int)strlen(campo_atual->chaveBuscaStr));
+        (*string_dinamica_original)[(int)strlen(campo_atual->chaveBuscaStr)] = '\0';
 
         return 1;
     }

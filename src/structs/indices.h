@@ -55,7 +55,7 @@
 
     int compara_dados_gen(void* esquerda, void* direita, int tipoVar);
 
-    int atualiza_dado(void** vetor_dados, int tipoVar, int tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset);
+    int atualiza_dado(void** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset);
 
     int checa_dado_nulo(void* dado, int tipoVar);
 #endif

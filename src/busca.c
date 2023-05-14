@@ -62,7 +62,8 @@ int indice_procura_registro(crime_t* crime_atual, long long int offset_atual, vo
 
     if (checa_dado_nulo(dado_crime, tipoVar) == 0) 
         busca_bin_campos(dados, num_dados, &low_reg, &high_reg, pega_chave_generico(dado_crime, tipoVar), tipoVar, 0);
-    
+    else
+        return -1; // nao esta no arquivo de indices
     free(dado_crime);
 
     if (low_reg < 0) return -1;

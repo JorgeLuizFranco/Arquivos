@@ -36,6 +36,8 @@ crime_t* copia_crime(crime_t* original) {
 
     copia->idCrime = original->idCrime;
     copia->numeroArtigo = original->numeroArtigo;
+    copia->removido = '0';
+
     copia_array_char(copia->dataCrime, original->dataCrime, 10);
     copia_array_char(copia->marcaCelular, original->marcaCelular, 12);
     
@@ -48,6 +50,7 @@ crime_t* copia_crime(crime_t* original) {
         return NULL;
     }
     copia_array_char(copia->descricaoCrime, original->descricaoCrime, strlen(original->descricaoCrime));
+    copia->descricaoCrime[(int)strlen(original->descricaoCrime)] = '\0';
 
     copia->lugarCrime = (char*) malloc(sizeof(char)*(strlen(original->lugarCrime)+1));
     if (copia->lugarCrime == NULL) {
@@ -55,6 +58,9 @@ crime_t* copia_crime(crime_t* original) {
         return NULL;
     }
     copia_array_char(copia->lugarCrime, original->lugarCrime, strlen(original->lugarCrime));
+    copia->lugarCrime[(int)strlen(original->lugarCrime)] = '\0';
+
+    copia->tamanho_real = tamanho_crime(copia) <= original->tamanho_real ? original->tamanho_real : tamanho_crime(copia);
 
     return copia;
 }
