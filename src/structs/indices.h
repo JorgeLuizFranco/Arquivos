@@ -58,4 +58,6 @@
     int atualiza_dado(void** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset);
 
     int checa_dado_nulo(void* dado, int tipoVar);
+
+    void seta_offset_gen(void* dado, int tipoVar, long long int offset);
 #endif
