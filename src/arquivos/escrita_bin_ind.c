@@ -62,9 +62,9 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
 
     long long int byteOffset = TAMANHO_CABECALHO;
 
-    int tipoVar = get_tipo_var(tipo_campo);
+    int tipoVar = get_tipo_var(tipo_campo); // pega o inteiro correspondente ao tipo
     void** vetor_dados = NULL;
-    vetor_dados = (void**) malloc(nro_registros * get_tam_var(tipoVar));
+    vetor_dados = (void**) malloc(nro_registros * get_tam_var(tipoVar)); // cria vetor de dados baseado no tipo
     if (vetor_dados == NULL) {
         erro();
         free(cabecalho_ind);
@@ -74,7 +74,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     void* dado_atual;
     crime_t* crime_atual;
 
-    while (byteOffset < byteOffset_reg) {
+    while (byteOffset < byteOffset_reg) {  // 
         crime_atual = le_crime_bin(arq_bin);
 
         if (crime_atual == NULL) {

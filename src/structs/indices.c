@@ -192,10 +192,12 @@ void remove_dado(void*** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado)
     *vetor_dados = (void**) realloc(*vetor_dados, (--(*tam_vetor))*get_tam_var(tipoVar));
 }
 
+// recebe um char* ("int" ou "string") e retorna um int (0 ou 1)
 int get_tipo_var(char* nome_tipo) {
     return nome_tipo[0] == 'i' ? 0 : 1;
 }
 
+// retorna tamanho em bytes de um tipo size(int) se 0, size(string) se 1
 size_t get_tam_var(int tipoVar) {
     if (tipoVar == 0) return sizeof(dados_int_t*);
     return sizeof(dados_str_t*);
