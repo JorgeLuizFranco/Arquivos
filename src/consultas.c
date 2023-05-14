@@ -184,12 +184,13 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             // para limpa-lo
             fclose(arq_idx);
             arq_idx = fopen(nome_arq_idx, "wb");
+            cabecalho_indice->nro_reg = num_indices;
             escreve_cabecalho_ind(arq_idx, cabecalho_indice);
             escreve_dados_gen(arq_idx, dados, tipoVar, num_indices);
         }
     }
 
-   libera_memo_consultas(0, arq_bin, cabecalho, arq_idx, cabecalho_indice, NULL, -1, dados, num_indices);
+    libera_memo_consultas(0, arq_bin, cabecalho, arq_idx, cabecalho_indice, NULL, -1, dados, num_indices);
 
     if (funcionalidade == 5 || funcionalidade == 7) {
         binarioNaTela(nome_arq_bin);

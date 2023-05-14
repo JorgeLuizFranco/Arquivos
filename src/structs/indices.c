@@ -237,3 +237,10 @@ int checa_dado_nulo(void* dado, int tipoVar) {
         return ((dados_int_t*)dado)->chaveBusca == -1;
     return ((dados_str_t*)dado)->chaveBusca[0] == '$';
 }
+
+void seta_offset_gen(void* dado, int tipoVar, long long int offset) {
+    if (tipoVar == 0)
+        ((dados_int_t*)dado)->byteOffset = offset;
+    else
+        ((dados_str_t*)dado)->byteOffset = offset;
+}

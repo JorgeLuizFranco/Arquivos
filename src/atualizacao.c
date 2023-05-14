@@ -14,6 +14,7 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
     }
 
     void* dado_crime = pega_dado_generico(crime_atualizado, nome_campo, -1, tipoVar); // so serve pra pegar chave busca a partir do nome do campo
+    void* dado_crime_antes = pega_dado_generico(crime_atual, nome_campo, -1, tipoVar);
 
     if (dado_crime == NULL) {
         // TODO erro de alocacao
@@ -33,16 +34,28 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
         remocao_logica(arq_bin, crime_atual, cabecalho, byteOffset);
     }
 
+    seta_offset_gen(dado_crime, tipoVar, byteOffset_final);
+
     if (flag_nova_pos != NULL) *flag_nova_pos = -1;
 
     if (flag_campo_atualiza != -1 || byteOffset_final != byteOffset) {
         // tenho que atualizar os dados (arq de indices)
-        int indice_crime = indice_procura_registro(crime_atual, byteOffset, dados, *num_indices, nome_campo, tipoVar);
-        int nova_pos;
 
-        nova_pos = atualiza_dado(dados, tipoVar, num_indices, indice_crime, pega_chave_generico(dado_crime, tipoVar), byteOffset_final);
-        if (flag_nova_pos != NULL) *flag_nova_pos = nova_pos;
+        // Se o dado era nulo e agora nao e mais, vou acrescentar nos indices de maneira ordenada
+        if (checa_dado_nulo(dado_crime_antes, tipoVar) && checa_dado_nulo(dado_crime, tipoVar) == 0) {
+            insere_dado_ordenado(&dados, tipoVar, num_indices, dado_crime);
+            libera_crime(crime_atualizado);
+            return 1;
+        } else {
+            // Se o dado era nulo e continua nulo, isso nao faz nada
+            // Se nao era nulo e passa a ser nulo, o codigo toma conta desse caso
+            // Se nao era nulo e continua nao nulo, atualizo normalmente
+            int indice_crime = indice_procura_registro(crime_atual, byteOffset, dados, *num_indices, nome_campo, tipoVar);
+            int nova_pos;
 
+            nova_pos = atualiza_dado(dados, tipoVar, num_indices, indice_crime, pega_chave_generico(dado_crime, tipoVar), byteOffset_final);
+            if (flag_nova_pos != NULL) *flag_nova_pos = nova_pos;
+        }
         
     }
 
