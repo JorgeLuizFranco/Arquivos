@@ -1,6 +1,19 @@
 #include "campos.h"
 #include "../extras/utils.h"
 
+void le_campo_inteiro(int* inteiro) {
+    char c = getc(stdin);
+    if (( c = getc(stdin)) == 'N') {
+        getc(stdin); // U
+        getc(stdin); // L
+        getc(stdin); // O
+        *inteiro = -1;
+    } else {
+        ungetc(c, stdin);
+        scanf("%d", inteiro);
+    }
+}
+
 campo_busca_t* le_campo_busca() {
     campo_busca_t* campo_atual = (campo_busca_t*) malloc(sizeof(campo_busca_t));
     if (campo_atual == NULL) return NULL;
@@ -8,7 +21,7 @@ campo_busca_t* le_campo_busca() {
     scanf("%s", campo_atual->campo_busca);
 
     if (strcmp("idCrime", campo_atual->campo_busca) == 0 || strcmp("numeroArtigo", campo_atual->campo_busca) == 0) {
-        scanf("%d", &(campo_atual->chaveBuscaInt));
+        le_campo_inteiro(&(campo_atual->chaveBuscaInt));
     } else {
         scan_quote_string(campo_atual->chaveBuscaStr);
     }

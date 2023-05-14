@@ -161,23 +161,20 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     int tipoVar = get_tipo_var(tipo_campo);
     int num_ind;
 
-    abre_arq_bin_ind(&arq_bin, nome_arq_bin, &arq_idx, nome_arq_idx, &cabecalho, &cabecalho_indice, &dados, tipoVar, &num_ind);
+    if (abre_arq_bin_ind(&arq_bin, nome_arq_bin, &arq_idx, nome_arq_idx, &cabecalho, &cabecalho_indice, &dados, tipoVar, &num_ind) == 0)
+        return;
 
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
 
     crime_t* crime_atual;
     for (int i = 0; i < num_consultas; i++) {
         crime_atual = le_crime_tela();
-        if (crime_atual == NULL || insere_crime_binario(arq_bin, nome_campo, &dados, tipoVar, &num_ind, cabecalho->proxByteOffset, crime_atual) == 0) {
+        if (crime_atual == NULL || insere_crime_binario(arq_bin, cabecalho, cabecalho_indice, nome_campo, &dados, tipoVar, &num_ind, crime_atual) == 0) {
             libera_vars(2, (void*)cabecalho, (void*)cabecalho_indice);
             fclose(arq_bin);
             fclose(arq_idx);
             erro();
             return;
-        } else {
-            cabecalho->proxByteOffset += tamanho_crime(crime_atual);
-            cabecalho->nroRegArq++;
-            cabecalho_indice->nro_reg++;
         }
         libera_crime(crime_atual);
     }

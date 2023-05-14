@@ -17,5 +17,6 @@
     int satisfaz_query(crime_t* crime_atual, campo_busca_t** query_atual, int n_campos);
     int atualiza_registro(crime_t* crime_atual, campo_busca_t** atualizacoes, int n_campos);
     int checa_campo_procurado(campo_busca_t** campos, int n_campos, char* nome_campo);
+    void le_campo_inteiro(int* inteiro);
 
 #endif

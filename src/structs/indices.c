@@ -54,8 +54,8 @@ void ordena_dados_str(dados_str_t** vetor_dados_str, int tamanho_vetor) {
 }
 
 int compara_dados_gen(void* esquerda, void* direita, int tipoVar) {
-    if (tipoVar == 0) return compara_dados_int(esquerda, direita);
-    return compara_dados_str(esquerda, direita);
+    if (tipoVar == 0) return compara_dados_int(&esquerda, &direita);
+    return compara_dados_str(&esquerda, &direita);
 }
 
 void ordena_dados_gen(void** vetor_dados, int tipoVar, int tamanho_vetor) {
@@ -222,4 +222,10 @@ int atualiza_dado(void** vetor_dados, int tipoVar, int tam_vetor, int pos_dado, 
         }
     
     return pos_final;
+}
+
+int checa_dado_nulo(void* dado, int tipoVar) {
+    if (tipoVar == 0)
+        return ((dados_int_t*)dado)->chaveBusca == -1;
+    return ((dados_str_t*)dado)->chaveBusca[0] == '$';
 }

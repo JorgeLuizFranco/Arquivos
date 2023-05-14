@@ -10,6 +10,6 @@
     #include "./arquivos/escrita_bin_ind.h"
     #include "busca.h"
 
-    int insere_crime_binario(FILE* arq_bin, char* nome_campo, void*** dados, int tipoVar, int* num_dados, long long int byteOffset, crime_t* crime);
+    int insere_crime_binario(FILE* arq_bin, cabecalho_t* cabecalho, cabecalho_indice_t* cabecalho_indice, char* nome_campo, void*** dados, int tipoVar, int* num_dados, crime_t* crime);
 
 #endif
