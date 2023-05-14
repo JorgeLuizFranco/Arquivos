@@ -25,18 +25,11 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
     long long int byteOffset_final = byteOffset; // byteoffset em que o crime atualizado vai ficar no final das contas
 
     // vou dar update colocando diretamente lá as informações
-    mostra_crime_tela(crime_atual);
     if (tamanho_crime(crime_atualizado) <= crime_atual->tamanho_real) {
         sobrescreve_crime(arq_bin, byteOffset, crime_atual->tamanho_real, crime_atualizado);
-        desloca_offset(arq_bin, byteOffset);
-        crime_atualizado = le_crime_bin(arq_bin);
-        mostra_crime_tela(crime_atualizado);
     } else {
         byteOffset_final = cabecalho->proxByteOffset;
         insere_no_final(arq_bin, cabecalho, crime_atualizado);
-        desloca_offset(arq_bin, byteOffset_final);
-        crime_atualizado = le_crime_bin(arq_bin);
-        mostra_crime_tela(crime_atualizado);
         remocao_logica(arq_bin, crime_atual, cabecalho, byteOffset);
     }
 
