@@ -55,12 +55,14 @@ void busca_bin_campos(void** ind_int, int num_regs, int* low_reg, int* high_reg,
 int indice_procura_registro(crime_t* crime_atual, long long int offset_atual, void** dados, int num_dados, char* nome_campo, int tipoVar) {
     if (dados == NULL) return -1;
     
-    int low_reg, high_reg;
+    int low_reg = 0, high_reg = num_dados-1;
     void* dado_atual;
     void* dado_crime = pega_dado_generico(crime_atual, nome_campo, -1, tipoVar); // so serve pra pegar chave busca a partir do nome do campo
     if (dado_crime == NULL) return -2;
 
-    busca_bin_campos(dados, num_dados, &low_reg, &high_reg, pega_chave_generico(dado_crime, tipoVar), tipoVar, 0);
+    if (checa_dado_nulo(dado_crime, tipoVar) == 0) 
+        busca_bin_campos(dados, num_dados, &low_reg, &high_reg, pega_chave_generico(dado_crime, tipoVar), tipoVar, 0);
+    
     free(dado_crime);
 
     if (low_reg < 0) return -1;

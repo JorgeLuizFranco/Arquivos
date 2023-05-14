@@ -28,12 +28,14 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     int num_indices;
 
     le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_indices);
-    if (dados == NULL) {
+    if (cabecalho_indice == NULL) {
         libera_memo_consultas(1, arq_bin, cabecalho, arq_idx, cabecalho_indice, NULL, -1, NULL, -1);
         return;
     }
 
     for (int i = 0; i < num_consultas; i++) {
+
+        fprintf(stderr, "%d\n", i);
 
         int regs_mostrados = 0;
         if (funcionalidade == 4)
@@ -63,11 +65,13 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         // sera que tem o campo do arquivo de indice?
         int flag_campo_procurado = checa_campo_procurado(campos, num_campos, nome_campo);
         int flag_campo_atualiza = checa_campo_procurado(campos_atualizar, num_campos_atualizar, nome_campo);
-        // se nao tiver ou nem existir indice, fazer uma busca linear no arquivo binario
-
-        if (cabecalho_indice == NULL || flag_campo_procurado == -1) {
+        // se o campo do indice nao tiver entre os campos especificados pela query, fazer uma busca linear no arquivo binario
+        
+        if (flag_campo_procurado == -1) {
+            fprintf(stderr, "aquii\n");
             long long int byteOffset = TAMANHO_CABECALHO;
-            while (byteOffset < cabecalho->proxByteOffset) {
+            long long int byteOffsetFinal = cabecalho->proxByteOffset;
+            while (byteOffset < byteOffsetFinal) {
                 crime_atual = le_crime_bin(arq_bin);
                 if (crime_atual == NULL) {
                     libera_memo_consultas(1, arq_bin,  cabecalho, arq_idx, cabecalho_indice, campos, num_campos, dados, num_indices);
@@ -85,13 +89,18 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         int ind_arquivo = indice_procura_registro(crime_atual, byteOffset, dados, num_indices, nome_campo, tipoVar);
                         remove_com_shift(&dados, tipoVar, &num_indices, ind_arquivo, cabecalho_indice);
                     } else if (funcionalidade == 7) {
+                        fprintf(stderr, "removendo %lld %d\n", byteOffset, crime_atual->tamanho_real);
+                        mostra_crime_tela(crime_atual);
                         atualizar(arq_bin, cabecalho, crime_atual, byteOffset, arq_idx, cabecalho_indice, 
                                   campos_atualizar, num_campos_atualizar, flag_campo_atualiza, 
                                   campos, num_campos, nome_campo, dados, num_indices, tipoVar, NULL);
+                        desloca_offset(arq_bin, byteOffset);
+                        crime_atual = le_crime_bin(arq_bin);
+                        mostra_crime_tela(crime_atual);
                     }
                 }
 
-                byteOffset += tamanho_crime(crime_atual);
+                byteOffset += crime_atual->tamanho_real;
                 libera_crime(crime_atual);
             }
         } else {
@@ -127,10 +136,13 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         high--;
                     } else if (funcionalidade == 7) {
                         int flag_nova_pos;
+                        mostra_crime_tela(crime_atual);
                         atualizar(arq_bin, cabecalho, crime_atual, byteOffset, arq_idx, cabecalho_indice, 
                                   campos_atualizar, num_campos_atualizar, flag_campo_atualiza, 
                                   campos, num_campos, nome_campo, dados, num_indices, tipoVar, &flag_nova_pos);
-                        
+                        desloca_offset(arq_bin, byteOffset);
+                        crime_atual = le_crime_bin(arq_bin);
+                        mostra_crime_tela(crime_atual);
                         if (flag_nova_pos <= low) {
                             // se igual: faco nada
                             // se menor:
@@ -139,7 +151,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
                         } else {
                             // se chegou aqui, flag > low
                             // isso quer dizer que aumentou a posicao
-                            // entao agora low aponta para o proximo cara, entao conserto isso
+                            // entao agora low aponta precocemente para o proximo cara, entao conserto isso
                             low--;
                             if (flag_nova_pos <= high) {
                                 // mas se aumentou e continua <= high quer dizer que a chave nao mudou
@@ -168,7 +180,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         if (funcionalidade == 7) libera_vetor_ate_pos((void**)campos_atualizar, num_campos_atualizar-1);
     }
 
-    if (funcionalidade == 5) {
+    if (funcionalidade == 5 || funcionalidade == 7) {
         desloca_offset(arq_bin, 0);
         escreve_cabecalho(arq_bin, cabecalho);
         if (arq_idx != NULL) {

@@ -195,6 +195,9 @@ size_t get_tam_var(int tipoVar) {
 }
 
 int atualiza_dado(void** vetor_dados, int tipoVar, int tam_vetor, int pos_dado, void* nova_chave_busca, long long int novo_byte_offset) {
+
+    if (pos_dado == -1) return -1;
+
     if (tipoVar == 0) {
         ((dados_int_t*)(vetor_dados[pos_dado]))->chaveBusca = *((int*)nova_chave_busca);
         ((dados_int_t*)(vetor_dados[pos_dado]))->byteOffset = novo_byte_offset;

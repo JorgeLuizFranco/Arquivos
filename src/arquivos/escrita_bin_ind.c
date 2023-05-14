@@ -34,8 +34,6 @@ void escreve_dados_gen(FILE* arq_indices, void** vetor_dados, int tipoVar, int t
 
 void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo, int nro_registros, long long int cab_byteOffset) {
 
-    int copia_nro_reg = nro_registros;
-
     cabecalho_indice_t* cabecalho_ind = cria_cabecalho_indice('0', 0);
     if (cabecalho_ind == NULL) {
         erro();
@@ -57,14 +55,13 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     void* dado_atual;
     crime_t* crime_atual;
 
-    int nro_reg_str = 0;
-
     while (byteOffset < cab_byteOffset) {
         crime_atual = le_crime_bin(arq_bin);
+
         if (crime_atual == NULL) {
             // em caso de erro de alocação
             free(cabecalho_ind);
-            if (vetor_dados != NULL) libera_vetor_ate_pos(vetor_dados, copia_nro_reg - nro_registros - 1);
+            if (vetor_dados != NULL) libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
             erro();
             return;
         }
@@ -74,37 +71,33 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
             if (dado_atual == NULL) {
                 libera_crime(crime_atual);
                 free(cabecalho_ind);
-                libera_vetor_ate_pos(vetor_dados, copia_nro_reg - nro_registros - 1);
+                libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
+                erro();
+                return;
             }
-            if (tipoVar == 1) {
-                if (((char*)pega_chave_generico(dado_atual, 1))[0] == '$') {
-                    free(dado_atual);
-                    byteOffset += tamanho_crime(crime_atual);
-                    libera_crime(crime_atual);
-                    continue;
-                }
-                vetor_dados[nro_reg_str++] = dado_atual;
-            } else {
-                vetor_dados[copia_nro_reg - nro_registros] = dado_atual;
+            if (checa_dado_nulo(dado_atual, tipoVar)) {
+                free(dado_atual);
+                byteOffset += tamanho_crime(crime_atual);
+                libera_crime(crime_atual);
+                continue;
             }
-            vetor_dados[copia_nro_reg - nro_registros] = dado_atual;
-            nro_registros--;
-            cabecalho_ind->nro_reg++;
+            vetor_dados[cabecalho_ind->nro_reg++] = dado_atual;
         }
         
         byteOffset += tamanho_crime(crime_atual);
         libera_crime(crime_atual); // libera memória alocada
     }
 
-    ordena_dados_gen(vetor_dados, tipoVar, tipoVar == 0 ? copia_nro_reg : nro_reg_str);
-    escreve_dados_gen(arq_ind, vetor_dados, tipoVar, tipoVar == 0 ? copia_nro_reg : nro_reg_str);
+    ordena_dados_gen(vetor_dados, tipoVar, cabecalho_ind->nro_reg);
+    escreve_dados_gen(arq_ind, vetor_dados, tipoVar, cabecalho_ind->nro_reg);
+    libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
 
     // volta ao início do binário
-    fseek(arq_ind, 0, SEEK_SET);
+    desloca_offset(arq_ind, 0);
     cabecalho_ind->status = '1'; // indica que terminou de escrever
     escreve_cabecalho_ind(arq_ind, cabecalho_ind);
     free(cabecalho_ind);
-    libera_vetor_ate_pos(vetor_dados, copia_nro_reg-1);
+    
 }
 
 void remove_com_shift(void*** dados, int tipoVar, int* num_indices, int ind_removido, cabecalho_indice_t* cabecalho_indice) {

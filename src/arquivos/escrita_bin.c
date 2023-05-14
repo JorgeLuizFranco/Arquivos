@@ -41,7 +41,7 @@ void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho, long 
     desloca_offset(arq_bin, byteOffset);
     crime->removido = '1';
     cabecalho->nroRegRem++;
-    escreve_registro_criminal(arq_bin, crime);
+    sobrescreve_crime(arq_bin, byteOffset, crime->tamanho_real, crime);
 }
 
 void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crime_antigo, crime_t* crime_novo) {

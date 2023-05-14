@@ -24,12 +24,12 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
     long long int byteOffset_final = byteOffset; // byteoffset em que o crime atualizado vai ficar no final das contas
 
     // vou dar update colocando diretamente lá as informações
-    if (tamanho_crime(crime_atualizado) <= tamanho_crime(crime_atual)) {
-        sobrescreve_crime(arq_bin, byteOffset, tamanho_crime(crime_atual), crime_atualizado);
+    if (tamanho_crime(crime_atualizado) <= crime_atual->tamanho_real) {
+        sobrescreve_crime(arq_bin, byteOffset, crime_atual->tamanho_real, crime_atualizado);
     } else {
-        remocao_logica(arq_bin, crime_atual, cabecalho, byteOffset);
-        insere_no_final(arq_bin, cabecalho, crime_atualizado);
         byteOffset_final = cabecalho->proxByteOffset;
+        insere_no_final(arq_bin, cabecalho, crime_atualizado);
+        remocao_logica(arq_bin, crime_atual, cabecalho, byteOffset);
     }
 
     if (flag_campo_atualiza != -1 || byteOffset_final != byteOffset) {
@@ -40,10 +40,10 @@ int atualizar(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* crime_atual, long 
         nova_pos = atualiza_dado(dados, tipoVar, num_indices, indice_crime, pega_chave_generico(dado_crime, tipoVar), byteOffset_final);
         if (flag_nova_pos != NULL) *flag_nova_pos = nova_pos;
 
-        free(dado_crime);
+        
     }
 
     libera_crime(crime_atualizado);
-
+    free(dado_crime);
     return 1;
 }

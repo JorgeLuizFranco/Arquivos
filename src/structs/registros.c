@@ -47,12 +47,14 @@ crime_t* copia_crime(crime_t* original) {
         libera_crime(copia);
         return NULL;
     }
+    copia_array_char(copia->descricaoCrime, original->descricaoCrime, strlen(original->descricaoCrime));
 
     copia->lugarCrime = (char*) malloc(sizeof(char)*(strlen(original->lugarCrime)+1));
     if (copia->lugarCrime == NULL) {
         libera_crime(copia);
         return NULL;
     }
+    copia_array_char(copia->lugarCrime, original->lugarCrime, strlen(original->lugarCrime));
 
     return copia;
 }

@@ -21,6 +21,9 @@
         // Campos variáveis
         char* lugarCrime;
         char* descricaoCrime;
+
+        // Campo auxiliar
+        int tamanho_real;
     };
 
     // registro header

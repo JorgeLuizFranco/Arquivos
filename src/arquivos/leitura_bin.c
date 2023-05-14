@@ -66,10 +66,13 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     le_campo_variavel_crime(&(crime->lugarCrime), arq_bin, '|');
     le_campo_variavel_crime(&(crime->descricaoCrime), arq_bin, '|');
 
-    // ler lixo ($), apenas para avançar o ponteiro
-    while (delimitador != '#')
-        fread(&delimitador, sizeof(char), 1, arq_bin); // $ ou #
+    crime->tamanho_real = tamanho_crime(crime) - 1;
 
+    // ler lixo ($), apenas para avançar o ponteiro
+    while (delimitador != '#') {
+        fread(&delimitador, sizeof(char), 1, arq_bin); // $ ou #
+        crime->tamanho_real++;
+    }
     return crime;
 }
 
