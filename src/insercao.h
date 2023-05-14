@@ -1,6 +1,6 @@
 #ifndef INSERCAO_H
     #define INSERCAO_H
-    
+    // comentado no .c
     #include <stdio.h>
     #include "./structs/registros.h"
     #include "./extras/utils.h"
