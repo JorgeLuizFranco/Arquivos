@@ -1,6 +1,8 @@
 #ifndef STRINGDINAMICA_H_
 #define STRINGDINAMICA_H_
 
+// explicado no .c
+
 #include <stdlib.h>
 #include <string.h>
 
