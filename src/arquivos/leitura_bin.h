@@ -1,6 +1,8 @@
 #ifndef LEITURA_BIN_H
     #define LEITURA_BIN_H
 
+    // explicacao no .c
+
     #include <stdio.h>
     #include "../structs/registros.h"
     #include "../extras/utils.h"

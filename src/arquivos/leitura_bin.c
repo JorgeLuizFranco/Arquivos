@@ -76,6 +76,13 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     return crime;
 }
 
+/**
+ * Lê crime com offset específico
+ * 
+ * @param arq_bin
+ * @param byteOffset
+ * @return crime no offset especificado
+*/
 crime_t* le_crime_bin_offset(FILE* arq_bin, long long int byteOffset) {
     desloca_offset(arq_bin, byteOffset);
     return le_crime_bin(arq_bin);
