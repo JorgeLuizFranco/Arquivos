@@ -222,7 +222,8 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         crime_atual = le_crime_tela(); // leio da tela a consulta atual
         // se ocorrer algum erro de alocação em algum ponto no código (inclusive ao tentar inserir), aborto
         if (crime_atual == NULL || insere_crime_binario(arq_bin, cabecalho, cabecalho_indice, nome_campo, &dados, tipoVar, &num_ind, crime_atual) == 0) {
-            libera_vars(2, (void*)cabecalho, (void*)cabecalho_indice);
+            free(cabecalho);
+            free(cabecalho_indice);
             fclose(arq_bin);
             fclose(arq_idx);
             erro();

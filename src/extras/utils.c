@@ -2,8 +2,13 @@
 #include<string.h>
 #include <ctype.h>
 
+// arquivo com diversas funções utilitárias usadas ao longo de todos os arquivos
 
-// Função fornecida
+/**
+ * Função fornecida
+ * 
+ * @param nomeArquivoBinario
+*/
 void binarioNaTela(char *nomeArquivoBinario) {
     /*
      * Você não precisa entender o código dessa função.
@@ -41,7 +46,11 @@ void binarioNaTela(char *nomeArquivoBinario) {
     fclose(fs);
 }
 
-
+/**
+ * Função fornecida
+ * 
+ * @param str string em que e guardada o resultado do escaneamento
+*/
 void scan_quote_string(char *str) {
     /*
      * Use essa função para ler um campo string delimitado entre aspas (").
@@ -92,19 +101,32 @@ void erro() {
     printf("Falha no processamento do arquivo.\n");
 }
 
+/**
+ * Função que dá free em cada lugar do vetor até uma certa posição e depois da free 
+ * no ponteiro associado ao vetor em si
+ * @param vetor vetor generico
+ * @param pos posicao ate a qual eu limpo
+*/
 void libera_vetor_ate_pos(void** vetor, int pos) {
     for (int i = 0; i <= pos; i++)
         free(vetor[i]);
     free(vetor);
 }
 
-int checa_existencia_arquivo(char* nome_arquivo) {
-    FILE* f = fopen(nome_arquivo, "rb");
-    if (f == NULL) return 1;
-    fclose(f);
-    return 0;
-}
-
+/**
+ * Usada na funcao realiza_consultas diversas vezes
+ * Libera memoria e fecha arquivos
+ * 
+ * @param flag_erro se =0, nao chama erro() caso algo aconteca. se=1, chama
+ * @param arq_bin
+ * @param cabecalho
+ * @param arq_idx
+ * @param cabecalho_indice
+ * @param campos
+ * @param num_campos
+ * @param dados
+ * @param num_dados
+*/
 void libera_memo_consultas(int flag_erro, FILE* arq_bin, cabecalho_t* cabecalho, FILE* arq_idx, cabecalho_indice_t* cabecalho_indice, campo_busca_t** campos, int num_campos, void** dados, int num_dados) {
 
     if (cabecalho_indice != NULL) free(cabecalho_indice);
@@ -117,12 +139,28 @@ void libera_memo_consultas(int flag_erro, FILE* arq_bin, cabecalho_t* cabecalho,
     if (flag_erro) erro();
 }
 
+/**
+ * Faz um fseek para um offset específico
+ * @param arq_bin
+ * @param byteOffset
+*/
 void desloca_offset(FILE* arq_bin, long long int byteOffset) {
     long long int posicao = ftell(arq_bin);
     fseek(arq_bin, byteOffset - posicao, SEEK_CUR);
 }
 
-// Abre arquivo binário e de índices
+/**
+ * Abre arquivo binário, de índices e seus cabeçalhos. Lida com erros
+ * @param arq_bin
+ * @param nome_arq_bin
+ * @param arq_idx
+ * @param cabecalho
+ * @param cabecalho_indice
+ * @param dados
+ * @param tipoVar
+ * @param num_ind
+ * @return 0 se ocorreu erro, 1 se deu tudo certo
+*/
 int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* nome_arq_idx, cabecalho_t** cabecalho, cabecalho_indice_t** cabecalho_indice, void*** dados, int tipoVar, int* num_ind) {
     *arq_bin = fopen(nome_arq_bin, "rb+");
     if (*arq_bin == NULL) {
@@ -158,15 +196,3 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
     return 1;
 }
 
-void libera_vars(int qnt, ...) {
-    va_list lista_args;
-    int j = 0;
-
-    va_start(lista_args, qnt);
-
-    for (j = 0; j < qnt; j++) {
-        free(va_arg(lista_args, void*));
-    }
-
-    va_end(lista_args);
-}
