@@ -30,7 +30,8 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         return;
     }
 
-    seta_consistencia_bin(arq_bin, cabecalho, '0');
+    if (funcionalidade == 5 || funcionalidade == 7)
+        seta_consistencia_bin(arq_bin, cabecalho, '0');
 
     // abre arquivo de índices e declara variáveis relacionadas
     FILE* arq_idx = fopen(nome_arq_idx, "rb+");
@@ -42,7 +43,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     int num_indices;
 
     le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_indices);
-    if (cabecalho_indice != NULL) seta_consistencia_ind(arq_idx, cabecalho_indice, '0');
+    if (cabecalho_indice != NULL && (funcionalidade == 5 || funcionalidade == 7)) seta_consistencia_ind(arq_idx, cabecalho_indice, '0');
     
     // se índice não estiver definido, libero memória e aborto
     // a não ser que seja a funcionalidade 4. Nesse caso, finge que apenas não existe arquivo de índices
@@ -252,11 +253,11 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         if (funcionalidade == 7) libera_vetor_ate_pos((void**)campos_atualizar, num_campos_atualizar-1);
     }
 
-    // volto para o início do binario
-    seta_consistencia_bin(arq_bin, cabecalho, '1');
-
     // terminado o loop, se a funcionalidade for a 5 ou a 7
     if (funcionalidade == 5 || funcionalidade == 7) {
+        // volto para o início do binario
+        seta_consistencia_bin(arq_bin, cabecalho, '1');
+
         if (arq_idx != NULL) {
             // se eu so der offset pro 0 e escrever o novo vetor de registros de dados,
             // vai sobrar no final do arquivo outros registros. So que quero limpar eles

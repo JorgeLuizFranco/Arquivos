@@ -112,7 +112,7 @@ void mostra_crimes_tela(char* nome_arq_bin) {
 */
 void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_ind) {
 
-    FILE* arq_bin = fopen(nome_arq_bin, "r+b"); // arquivo de registros. vou ler, mas preciso escrever como inconsistente
+    FILE* arq_bin = fopen(nome_arq_bin, "rb"); // arquivo de registros. vou ler, mas preciso escrever como inconsistente
     if (arq_bin == NULL) {
         erro();
         return;
@@ -125,8 +125,6 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         erro();
         return;
     }
-
-    seta_consistencia_bin(arq_bin, cabecalho, '0');
 
     // número de registro nao removidos
     int n_registros = cabecalho->nroRegArq - cabecalho->nroRegRem; 
@@ -141,7 +139,6 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 
     // depois de abrir arquivos, chama função implementada em escrita_bin_ind.c
     escreve_arq_ind(arq_bin, arq_ind, nome_campo, tipo_campo, n_registros, cabecalho->proxByteOffset);
-    seta_consistencia_bin(arq_bin, cabecalho, '1');
     
     // desalocações de memória, fechamento dos arquivos
     free(cabecalho);
