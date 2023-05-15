@@ -1,6 +1,8 @@
 #ifndef LEITURA_CSV_H
     #define LEITURA_CSV_H
 
+    // comentado no .c
+
     #include <stdio.h>
     #include <stdlib.h>
     #include "../structs/registros.h"
