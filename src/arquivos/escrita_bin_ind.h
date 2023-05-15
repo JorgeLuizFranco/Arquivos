@@ -1,6 +1,8 @@
 #ifndef ESCRITA_BIN_IND_H
     #define ESCRITA_BIN_IND_H
 
+    // escreve .c
+
     #include <stdio.h>
     #include "../structs/indices.h"
     #include "../extras/utils.h"

@@ -11,26 +11,61 @@ void escreve_cabecalho_ind(FILE* arq_indices, cabecalho_indice_t* dados_cabecalh
     fwrite(&(dados_cabecalho->nro_reg), sizeof(int), 1, arq_indices);
 }
 
+/**
+ * escreve registro de indices do tipo inteiro em arquivo de indices
+ * 
+ * @param arq_indices
+ * @param dado_int
+*/
 void escreve_dado_int(FILE* arq_indices, dados_int_t* dado_int) {
     fwrite(&(dado_int->chaveBusca), sizeof(int), 1, arq_indices);
     fwrite(&(dado_int->byteOffset), sizeof(long long int), 1, arq_indices);
 }
 
+/**
+ * escreve registro de indices do tipo string em arquivos de indices
+ * 
+ * @param arq_indices
+ * @param dado_str
+*/
 void escreve_dado_str(FILE* arq_indices, dados_str_t* dado_str) {
     fwrite(dado_str->chaveBusca, sizeof(char), 12, arq_indices);
     fwrite(&(dado_str->byteOffset), sizeof(long long int), 1, arq_indices);
 }
 
+/**
+ * escreve array de indices do tipo int em arquivo de indices
+ * 
+ * @param arq_indices
+ * @param vetor_dados_int
+ * @param tamanho_vetor
+*/
 void escreve_dados_int(FILE* arq_indices, dados_int_t** vetor_dados_int, int tamanho_vetor) {
     for (int i = 0; i < tamanho_vetor; i++)
         escreve_dado_int(arq_indices, vetor_dados_int[i]);
 }
 
+/**
+ * 
+ * escreve array de indices do tipo string em arquivo de indices
+ * 
+ * @param arq_indices
+ * @param vetor_dados_str
+ * @param tamanho_vetor
+*/
 void escreve_dados_str(FILE* arq_indices, dados_str_t** vetor_dados_str, int tamanho_vetor) {
     for (int i = 0; i < tamanho_vetor; i++)
         escreve_dado_str(arq_indices, vetor_dados_str[i]);
 }
 
+/**
+ * escreve array de dados genericos em arquivo de indices
+ * 
+ * @param arq_indices
+ * @param vetor_dados
+ * @param tipoVar
+ * @param tamanho_vetor
+*/
 void escreve_dados_gen(FILE* arq_indices, void** vetor_dados, int tipoVar, int tamanho_vetor) {
     if (tipoVar == 0)
         escreve_dados_int(arq_indices, (dados_int_t**)vetor_dados, tamanho_vetor);
@@ -74,7 +109,7 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     void* dado_atual;
     crime_t* crime_atual;
 
-    while (byteOffset < byteOffset_reg) {  // 
+    while (byteOffset < byteOffset_reg) {  // vai lendo crime por crime ate chegar no offset do arquivo
         crime_atual = le_crime_bin(arq_bin);
 
         if (crime_atual == NULL) {
@@ -85,9 +120,12 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
             return;
         }
 
+        // se crime nao tiver marcado como removido
         if (crime_atual->removido != '1') { 
+            // pega o registro de indice correspondente
             dado_atual = pega_dado_generico(crime_atual, nome_campo, byteOffset, tipoVar);
             if (dado_atual == NULL) {
+                // erro de alocação
                 libera_crime(crime_atual);
                 free(cabecalho_ind);
                 libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
@@ -95,25 +133,30 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
                 return;
             }
             if (checa_dado_nulo(dado_atual, tipoVar)) {
+                // se for nulo, ignora esse
                 free(dado_atual);
                 byteOffset += crime_atual->tamanho_real;
                 libera_crime(crime_atual);
                 continue;
             }
+            // se não for nulo, coloca no vetor
             vetor_dados[cabecalho_ind->nro_reg++] = dado_atual;
         }
         
+        // vai pro próximo
         byteOffset += crime_atual->tamanho_real;
         libera_crime(crime_atual); // libera memória alocada
     }
 
+    // ordena vetor de dados, escreve-o no arquivo
     ordena_dados_gen(vetor_dados, tipoVar, cabecalho_ind->nro_reg);
     escreve_dados_gen(arq_ind, vetor_dados, tipoVar, cabecalho_ind->nro_reg);
+    // libera vetor de dados
     libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
 
-    // volta ao início do binário
+    // volta ao início do arquivo de índices
     desloca_offset(arq_ind, 0);
-    cabecalho_ind->status = '1'; // indica que terminou de escrever
+    cabecalho_ind->status = '1'; // indica que ja e consistente
     escreve_cabecalho_ind(arq_ind, cabecalho_ind);
     free(cabecalho_ind);
     
