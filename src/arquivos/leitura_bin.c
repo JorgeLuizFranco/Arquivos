@@ -66,7 +66,7 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     le_campo_variavel_crime(&(crime->lugarCrime), arq_bin, '|');
     le_campo_variavel_crime(&(crime->descricaoCrime), arq_bin, '|');
 
-    crime->tamanho_real = tamanho_crime(crime) - 1;
+    crime->tamanho_real = tamanho_crime(crime) - 1; // por enquanto eh isso -1 (pq n contei # ainda) mas vai aumentando
 
     // ler lixo ($), apenas para avançar o ponteiro
     while (delimitador != '#') {

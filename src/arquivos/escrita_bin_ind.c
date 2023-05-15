@@ -108,10 +108,8 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
 
     void* dado_atual;
     crime_t* crime_atual;
-
     while (byteOffset < byteOffset_reg) {  // vai lendo crime por crime ate chegar no offset do arquivo
         crime_atual = le_crime_bin(arq_bin);
-
         if (crime_atual == NULL) {
             // em caso de erro de alocação
             free(cabecalho_ind);
@@ -151,12 +149,14 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     // ordena vetor de dados, escreve-o no arquivo
     ordena_dados_gen(vetor_dados, tipoVar, cabecalho_ind->nro_reg);
     escreve_dados_gen(arq_ind, vetor_dados, tipoVar, cabecalho_ind->nro_reg);
+
     // libera vetor de dados
     libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
-
+    
     // volta ao início do arquivo de índices e seta consistencia e conserta
     // numero de registros
     seta_consistencia_ind(arq_ind, cabecalho_ind, '1');
+    
     free(cabecalho_ind);
     
 }
