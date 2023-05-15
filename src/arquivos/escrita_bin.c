@@ -37,12 +37,28 @@ void escreve_registro_criminal(FILE* arq_bin, crime_t* crime) {
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
 }
 
+/**
+ * Remove logicamente um registro criminal
+ * 
+ * @param arq_bin
+ * @param crime
+ * @param cabecalho
+ * @param byteOffset offset em que se encontra o crime
+*/
 void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho, long long int byteOffset) {
     crime->removido = '1';
     cabecalho->nroRegRem++;
     sobrescreve_crime(arq_bin, byteOffset, crime->tamanho_real, crime);
 }
 
+/**
+ * Sobrescreve um determinado crime
+ * 
+ * @param arq_bin
+ * @param byteOffset
+ * @param tamanho_crime_antigo
+ * @param crime_novo
+*/
 void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crime_antigo, crime_t* crime_novo) {
     // se chamei aqui tenho a garantia de que o tamanho do crime antigo eh menor ou igual
     desloca_offset(arq_bin, byteOffset);
@@ -70,7 +86,13 @@ void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crim
     delimitador = '#';
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
 }
-
+/**
+ * Insere crime ao final de arquivo binario
+ * 
+ * @param arq_bin
+ * @param cabecalho
+ * @param novo_crime
+*/
 void insere_no_final(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* novo_crime) {
     cabecalho->nroRegArq++;
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
