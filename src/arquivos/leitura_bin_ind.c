@@ -1,5 +1,11 @@
 #include "leitura_bin_ind.h"
 
+/**
+ * Lê o cabeçalho do arquivo binário de índicess contendo os metadados do arquivo.
+ *
+ * @param arq_indices Arquivo binário que será lido.
+ * @param cabecalho_indice ponteiro que referencia a estrutura que armazenará o cabeçalho lido
+ */
 void le_cabecalho_indice(FILE* arq_indices, cabecalho_indice_t** cabecalho_indice) {
     char status;
     int nro_reg;
@@ -8,6 +14,12 @@ void le_cabecalho_indice(FILE* arq_indices, cabecalho_indice_t** cabecalho_indic
     *cabecalho_indice = cria_cabecalho_indice(status, nro_reg);
 }
 
+/**
+ * Lê um dado inteiro do arquivo binário de índices
+ *
+ * @param arq_indices Arquivo binário que será lido.
+ * @param dado_int ponteiro que referencia a estrutura que armazenará o dado lido
+ */
 void le_dado_int(FILE* arq_indices, dados_int_t** dado_int) {
     int chaveBusca;
     long long int byteOffset;
@@ -16,6 +28,12 @@ void le_dado_int(FILE* arq_indices, dados_int_t** dado_int) {
     *dado_int = cria_dados_int(chaveBusca, byteOffset);
 }
 
+/**
+ * Lê um dado string do arquivo binário de índices
+ *
+ * @param arq_indices Arquivo binário que será lido.
+ * @param dado_str ponteiro que referencia a estrutura que armazenará o dado lido
+ */
 void le_dado_str(FILE* arq_indices, dados_str_t** dado_str) {
     char chaveBusca[12];
     long long int byteOffset;
@@ -24,6 +42,13 @@ void le_dado_str(FILE* arq_indices, dados_str_t** dado_str) {
     *dado_str = cria_dados_str(chaveBusca, 12, byteOffset);
 }
 
+/**
+ * Lê um dado genérico do arquivo binário de índices
+ *
+ * @param arq_indices Arquivo binário que será lido.
+ * @param dado_gen ponteiro que referencia a estrutura que armazenará o dado lido (antes do cast)
+ * @param tipo_var tipo de índice genérico (de string(1) ou de int(0)) 
+ */
 void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
     if (tipoVar == 0) {
         le_dado_int(arq_indices, (dados_int_t**)dado_gen);
@@ -32,6 +57,15 @@ void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
     }
 }
 
+/**
+ * Lê um dado genérico do arquivo binário de índices
+ *
+ * @param arq_indices Arquivo binário que será lido.
+ * @param dados lista de dados genericos
+ * @param tipo_var tipo de índice genérico (de string(1) ou de int(0)) 
+ * @param cabecalho_indice ponteiro que referencia a estrutura que armazenará o cabeçalho lido
+ * @param num_ind referenciaa a int que armazenará número de índices
+ */
 int le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
     *num_ind = 0;
     if (arq_indices == NULL) return -1;
