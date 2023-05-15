@@ -42,7 +42,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     int num_indices;
 
     le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_indices);
-    if (arq_idx != NULL) seta_consistencia_ind(arq_idx, cabecalho_indice, '0');
+    if (cabecalho_indice != NULL) seta_consistencia_ind(arq_idx, cabecalho_indice, '0');
     
     // se índice não estiver definido, libero memória e aborto
     // a não ser que seja a funcionalidade 4. Nesse caso, finge que apenas não existe arquivo de índices

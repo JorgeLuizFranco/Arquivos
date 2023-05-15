@@ -154,7 +154,8 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     // libera vetor de dados
     libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
 
-    // volta ao início do arquivo de índices e seta consistencia
+    // volta ao início do arquivo de índices e seta consistencia e conserta
+    // numero de registros
     seta_consistencia_ind(arq_ind, cabecalho_ind, '1');
     free(cabecalho_ind);
     
