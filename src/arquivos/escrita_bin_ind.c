@@ -154,17 +154,37 @@ void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_
     // libera vetor de dados
     libera_vetor_ate_pos(vetor_dados, cabecalho_ind->nro_reg-1);
 
-    // volta ao início do arquivo de índices
-    desloca_offset(arq_ind, 0);
-    cabecalho_ind->status = '1'; // indica que ja e consistente
-    escreve_cabecalho_ind(arq_ind, cabecalho_ind);
+    // volta ao início do arquivo de índices e seta consistencia
+    seta_consistencia_ind(arq_ind, cabecalho_ind, '1');
     free(cabecalho_ind);
     
 }
 
+/**
+ * Remove indice de vetor de dados se >= 0
+ * 
+ * @param dados
+ * @param tipoVar
+ * @param num_indices
+ * @param ind_removido
+ * @param cabecalho_indice
+*/
 void remove_com_shift(void*** dados, int tipoVar, int* num_indices, int ind_removido, cabecalho_indice_t* cabecalho_indice) {
     if (ind_removido >= 0) {
         cabecalho_indice->nro_reg--;
         remove_dado(dados, tipoVar, num_indices, ind_removido);
     }
+}
+
+/**
+ * Seta consistencia do cabecalho
+ * 
+ * @param arq_bin
+ * @param cabecalho
+ * @param consistencia
+*/
+void seta_consistencia_ind(FILE* arq_ind, cabecalho_indice_t* cabecalho_indice, char consistencia) {
+    desloca_offset(arq_ind, 0);
+    cabecalho_indice->status = consistencia;
+    escreve_cabecalho_ind(arq_ind, cabecalho_indice);
 }

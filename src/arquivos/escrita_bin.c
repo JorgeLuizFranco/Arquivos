@@ -86,6 +86,7 @@ void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crim
     delimitador = '#';
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
 }
+
 /**
  * Insere crime ao final de arquivo binario
  * 
@@ -98,4 +99,17 @@ void insere_no_final(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* novo_crime)
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
     escreve_registro_criminal(arq_bin, novo_crime);
     cabecalho->proxByteOffset += tamanho_crime(novo_crime);
+}
+
+/**
+ * Seta consistencia do cabecalho
+ * 
+ * @param arq_bin
+ * @param cabecalho
+ * @param consistencia
+*/
+void seta_consistencia_bin(FILE* arq_bin, cabecalho_t* cabecalho, char consistencia) {
+    desloca_offset(arq_bin, 0);
+    cabecalho->status = consistencia;
+    escreve_cabecalho(arq_bin, cabecalho);
 }

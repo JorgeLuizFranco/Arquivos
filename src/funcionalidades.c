@@ -126,6 +126,8 @@ void cria_arq_indices(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         return;
     }
 
+    seta_consistencia_bin(arq_bin, cabecalho, '0');
+
     // número de registro nao removidos
     int n_registros = cabecalho->nroRegArq - cabecalho->nroRegRem; 
 
@@ -205,13 +207,9 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 
     // enquanto uso os arquivos, deixo status como 0
     // faço isso pro arquivo binário
-    desloca_offset(arq_bin, 0);
-    cabecalho->status = '0';
-    escreve_cabecalho(arq_bin, cabecalho);
+    seta_consistencia_bin(arq_bin, cabecalho, '0');
     // faço isso pro arquivo de índices
-    desloca_offset(arq_idx, 0);
-    cabecalho_indice->status = '0';
-    escreve_cabecalho_ind(arq_idx, cabecalho_indice);
+    seta_consistencia_ind(arq_idx, cabecalho_indice, '0');
 
 
     // dou fseek para o final porque insercao eh no final do arquivo
@@ -233,17 +231,13 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     }
 
     // finaliza a escrita do arquivo binário
-    desloca_offset(arq_bin, 0);
-    cabecalho->status = '1';
-    escreve_cabecalho(arq_bin, cabecalho);
+    seta_consistencia_bin(arq_bin, cabecalho, '1');
     free(cabecalho);
     fclose(arq_bin);
 
     // finaliza a escrita do arquivo de índices
     desloca_offset(arq_idx, 0);
-    cabecalho_indice->status = '1';
-    escreve_cabecalho_ind(arq_idx, cabecalho_indice);
-    free(cabecalho_indice);
+    seta_consistencia_ind(arq_idx, cabecalho_indice, '1');
     escreve_dados_gen(arq_idx, dados, tipoVar, cabecalho_indice->nro_reg);
     fclose(arq_idx);
 

@@ -25,10 +25,12 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         return;
     }
     cabecalho_t* cabecalho = le_cabecalho_bin(arq_bin);
-    if (cabecalho == NULL) {
-        libera_memo_consultas(1, arq_bin, NULL, NULL, NULL, NULL, -1, NULL, -1);
+    if (cabecalho == NULL || cabecalho->status == '0') {
+        libera_memo_consultas(1, arq_bin, cabecalho, NULL, NULL, NULL, -1, NULL, -1);
         return;
     }
+
+    seta_consistencia_bin(arq_bin, cabecalho, '0');
 
     // abre arquivo de índices e declara variáveis relacionadas
     FILE* arq_idx = fopen(nome_arq_idx, "rb+");
@@ -40,6 +42,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
     int num_indices;
 
     le_arq_indices(arq_idx, &dados, tipoVar, &cabecalho_indice, &num_indices);
+    if (arq_idx != NULL) seta_consistencia_ind(arq_idx, cabecalho_indice, '0');
     
     // se índice não estiver definido, libero memória e aborto
     // a não ser que seja a funcionalidade 4. Nesse caso, finge que apenas não existe arquivo de índices
@@ -249,11 +252,11 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
         if (funcionalidade == 7) libera_vetor_ate_pos((void**)campos_atualizar, num_campos_atualizar-1);
     }
 
+    // volto para o início do binario
+    seta_consistencia_bin(arq_bin, cabecalho, '1');
+
     // terminado o loop, se a funcionalidade for a 5 ou a 7
     if (funcionalidade == 5 || funcionalidade == 7) {
-        // volto para o início dos arquivos
-        desloca_offset(arq_bin, 0);
-        escreve_cabecalho(arq_bin, cabecalho);
         if (arq_idx != NULL) {
             // se eu so der offset pro 0 e escrever o novo vetor de registros de dados,
             // vai sobrar no final do arquivo outros registros. So que quero limpar eles
@@ -262,6 +265,7 @@ void realiza_consultas(char* nome_arq_bin, char* nome_campo, char* tipo_campo, c
             fclose(arq_idx);
             arq_idx = fopen(nome_arq_idx, "wb");
             cabecalho_indice->nro_reg = num_indices;
+            cabecalho_indice->status = '1';
             escreve_cabecalho_ind(arq_idx, cabecalho_indice);
             escreve_dados_gen(arq_idx, dados, tipoVar, num_indices);
         }

@@ -12,5 +12,6 @@
     void escreve_dados_gen(FILE* arq_indices, void** vetor_dados, int tipoVar, int tamanho_vetor);
     void escreve_cabecalho_ind(FILE* arq_indices, cabecalho_indice_t* dados_cabecalho);
     void remove_com_shift(void*** dados, int tipoVar, int* num_indices, int ind_removido, cabecalho_indice_t* cabecalho_indice);
+    void seta_consistencia_ind(FILE* arq_ind, cabecalho_indice_t* cabecalho_indice, char consistencia);
     
 #endif
