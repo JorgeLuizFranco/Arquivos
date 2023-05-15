@@ -24,3 +24,7 @@ clean:
 
 run:
 	./programa
+
+zip:
+	zip -r trabalho1_arquivos.zip Makefile README.md src/
+
