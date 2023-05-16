@@ -7,7 +7,7 @@
 
 ## Como organizamos os .c e os .h?
 
-O Makefile está na raiz do zip e os arquivos do código estão na pasta stc. Para deixar o código mais limpo, criamos vários arquivos .c e .h, que estão divididos em pastas.
+O Makefile está na raiz do zip e os arquivos do código estão na pasta src. Para deixar o código mais limpo, criamos vários arquivos .c e .h, que estão divididos em pastas.
 
 O programa principal está no main.c, que pega a primeira parte da entrada e joga como argumento de funções implementadas em funcionalidades.h.
 
