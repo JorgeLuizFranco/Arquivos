@@ -10,5 +10,6 @@
 void mostra_crimes_tela_arq(FILE* arq_bin, int n_registros);
 void mostra_crime_tela(crime_t* crime);
 crime_t* le_crime_tela();
+void msg_inexistente();
 
 #endif

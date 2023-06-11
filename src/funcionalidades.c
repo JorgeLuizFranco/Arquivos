@@ -272,3 +272,59 @@ void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, 
     // Especifico que quero aplicar a funcionalidade 7
     realiza_consultas(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas, 7);
 }
+
+/**
+ * FUNCIONALIDADE 9
+ * Procura registros em arquivo de índices árvore b
+ */
+void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
+                            char* nome_arq_arvb, int num_consultas) {
+
+    if (tipo_campo[0] == 's') {
+        erro();
+        return;
+    }
+
+    FILE* arq_bin;
+    FILE* arq_arvb;
+    cabecalho_t* cab_arq_bin;
+    cab_arvb_t* cab_arvb;
+    if (abre_arq_bin_arv(&arq_bin, nome_arq_bin, &arq_arvb, nome_arq_arvb, &cab_arq_bin,
+                         &cab_arvb) == 0) {
+        erro();
+        return;
+    }
+
+    int num_campos = -1;
+    campo_busca_t** campos = NULL;
+    for (int i = 0; i < num_consultas; i++) {
+        scanf("%d", &num_campos);
+        campos = le_campos_busca(num_campos);
+        if (campos == NULL) {
+            fecha_arquivos(2, arq_bin, arq_arvb);
+            libera_memo(2, cab_arvb, cab_arq_bin);
+            erro();
+            return;
+        }
+
+        if (i != 0) {
+            desloca_offset(arq_bin, TAMANHO_CABECALHO);
+            desloca_offset(arq_arvb, TAMANHO_PAGINA_ARVB);
+        }
+
+        printf("Resposta para a busca %d\n", i + 1);
+
+        if (busca_arvb(arq_bin, arq_arvb, cab_arvb, cab_arq_bin, campos, num_campos, nome_campo) ==
+            0) {
+            fecha_arquivos(2, arq_arvb, arq_bin);
+            libera_memo(2, cab_arvb, cab_arq_bin);
+            erro();
+            return;
+        }
+
+        libera_arr((void**)campos, num_campos);
+    }
+
+    fecha_arquivos(2, arq_arvb, arq_bin);
+    libera_memo(2, cab_arvb, cab_arq_bin);
+}

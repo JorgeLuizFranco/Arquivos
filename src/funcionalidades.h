@@ -6,6 +6,7 @@
 #include "./arquivos/leitura_bin.h"
 #include "./arquivos/leitura_bin_ind.h"
 #include "./arquivos/leitura_csv.h"
+#include "./arvb_busca.h"
 #include "./extras/utils.h"
 #include "./io/io_crimes.h"
 #include "consultas.h"
@@ -51,5 +52,9 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 // atualiza os registros informados pelo usuário da maneira como ele especificou
 void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx,
                         int num_consultas);
+
+// Funcionalidade 9
+void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
+                            char* nome_arq_arvb, int num_consultas);
 
 #endif

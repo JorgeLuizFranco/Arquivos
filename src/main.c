@@ -66,5 +66,16 @@ int main() {
         atualiza_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
         break;
+
+    case 8:
+
+        break;
+
+    case 9:
+
+        scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+        arvb_procura_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+
+        break;
     }
 }

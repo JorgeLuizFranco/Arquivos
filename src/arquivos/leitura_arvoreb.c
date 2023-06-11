@@ -5,9 +5,9 @@ cab_arvb_t* le_cab_arvb(FILE* arq_arvb) {
     if (cab_arvb == NULL) return NULL;
 
     fread(&(cab_arvb->status), sizeof(char), 1, arq_arvb);
+    fread(&(cab_arvb->noRaiz), sizeof(int), 1, arq_arvb);
     fread(&(cab_arvb->proxRRN), sizeof(int), 1, arq_arvb);
     fread(&(cab_arvb->nroNiveis), sizeof(int), 1, arq_arvb);
-    fread(&(cab_arvb->noRaiz), sizeof(int), 1, arq_arvb);
     fread(&(cab_arvb->nroChaves), sizeof(int), 1, arq_arvb);
 
     char lixo;
@@ -32,4 +32,6 @@ no_t* le_no_arvb(FILE* arq_arvb) {
     }
 
     fread(&(no->ponteiro[ORDEM_ARVORE - 1]), sizeof(int), 1, arq_arvb);
+
+    return no;
 }

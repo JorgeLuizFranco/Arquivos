@@ -1,8 +1,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
+#include "../arquivos/leitura_arvoreb.h"
 #include "../arquivos/leitura_bin.h"
 #include "../arquivos/leitura_bin_ind.h"
+#include "../structs/arvoreb.h"
 #include "../structs/campos.h"
 #include "../structs/indices.h"
 #include "../structs/registros.h"
@@ -33,8 +35,13 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
                      cabecalho_t** cabecalho, cabecalho_indice_t** cabecalho_indice, void*** dados,
                      int tipoVar, int* num_ind);
 
+int abre_arq_bin_arv(FILE** arq_bin, char* nome_arq_bin, FILE** arq_arv, char* nome_arq_arv,
+                     cabecalho_t** cab_arq_bin, cab_arvb_t** cab_arvb);
+
 void fecha_arquivos(int num_arqs, ...);
 
 void libera_memo(int num_ponts, ...);
+
+void libera_arr(void** arr, int tamanho);
 
 #endif

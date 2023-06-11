@@ -164,3 +164,5 @@ crime_t* le_crime_tela() {
 
     return crime;
 }
+
+void msg_inexistente() { printf("Registro inexistente.\n"); }

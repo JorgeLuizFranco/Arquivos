@@ -4,7 +4,7 @@
 #include "indices.h"
 #include <stdlib.h>
 
-static const int ORDEM_ARVORE = 5;
+#define ORDEM_ARVORE 5
 static const int LIXO_CABECALHO = 59;
 static const int TAMANHO_PAGINA_ARVB = 76;
 
@@ -24,5 +24,8 @@ struct Cabecalho_Arvoreb {
     int nroNiveis;
     int nroChaves;
 };
+
+int busca_bin_no(no_t* no_atual, dados_int_t* chave);
+void debuga_no(no_t* no_atual);
 
 #endif

@@ -21,6 +21,7 @@ $(OBJ_FOLDER)/%.o : $(SRC_FOLDER)/%.c
 
 clean:
 	rm -rf $(BUILD_FOLDER)
+	clear
 
 run:
 	./programa

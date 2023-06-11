@@ -165,6 +165,15 @@ void libera_memo(int num_ponts, ...) {
 }
 
 /**
+ * TODO
+ */
+void libera_arr(void** arr, int tamanho) {
+    for (int i = 0; i < tamanho; i++)
+        free(arr[i]);
+    free(arr);
+}
+
+/**
  * Faz um fseek para um offset específico
  * @param arq_bin
  * @param byteOffset
@@ -217,6 +226,35 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
         fclose(*arq_bin);
         fclose(*arq_idx);
         free(*cabecalho);
+        return 0;
+    }
+
+    return 1;
+}
+
+int abre_arq_bin_arv(FILE** arq_bin, char* nome_arq_bin, FILE** arq_arv, char* nome_arq_arv,
+                     cabecalho_t** cab_arq_bin, cab_arvb_t** cab_arvb) {
+    *arq_bin = fopen(nome_arq_bin, "rb+");
+    if (*arq_bin == NULL) {
+        return 0;
+    }
+    *cab_arq_bin = le_cabecalho_bin(*arq_bin);
+    if (*cab_arq_bin == NULL || (*cab_arq_bin)->status == '0') {
+        fecha_arquivos(1, *arq_bin);
+        libera_memo(1, *cab_arq_bin);
+        return 0;
+    }
+
+    *arq_arv = fopen(nome_arq_arv, "rb");
+    if (*arq_arv == NULL) {
+        fecha_arquivos(1, *arq_bin);
+        libera_memo(1, *cab_arq_bin);
+        return 0;
+    }
+    *cab_arvb = le_cab_arvb(*arq_arv);
+    if (*cab_arvb == NULL || (*cab_arvb)->status == '0') {
+        fecha_arquivos(2, *arq_bin, *arq_arv);
+        libera_memo(2, *cab_arvb, *cab_arq_bin);
         return 0;
     }
 
