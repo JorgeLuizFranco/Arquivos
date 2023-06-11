@@ -29,9 +29,9 @@ void escreve_registro_criminal(FILE* arq_bin, crime_t* crime) {
 
     // Escreve campos variáveis com delimitadores e sem \0
     char delimitador = '|';
-    fwrite(crime->lugarCrime, sizeof(char), (int) strlen(crime->lugarCrime), arq_bin);
+    fwrite(crime->lugarCrime, sizeof(char), (int)strlen(crime->lugarCrime), arq_bin);
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
-    fwrite(crime->descricaoCrime, sizeof(char), (int) strlen(crime->descricaoCrime), arq_bin);
+    fwrite(crime->descricaoCrime, sizeof(char), (int)strlen(crime->descricaoCrime), arq_bin);
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
     delimitador = '#';
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
@@ -39,13 +39,14 @@ void escreve_registro_criminal(FILE* arq_bin, crime_t* crime) {
 
 /**
  * Remove logicamente um registro criminal
- * 
+ *
  * @param arq_bin
  * @param crime
  * @param cabecalho
  * @param byteOffset offset em que se encontra o crime
-*/
-void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho, long long int byteOffset) {
+ */
+void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho,
+                    long long int byteOffset) {
     crime->removido = '1';
     cabecalho->nroRegRem++;
     sobrescreve_crime(arq_bin, byteOffset, crime->tamanho_real, crime);
@@ -53,16 +54,17 @@ void remocao_logica(FILE* arq_bin, crime_t* crime, cabecalho_t* cabecalho, long 
 
 /**
  * Sobrescreve um determinado crime
- * 
+ *
  * @param arq_bin
  * @param byteOffset
  * @param tamanho_crime_antigo
  * @param crime_novo
-*/
-void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crime_antigo, crime_t* crime_novo) {
+ */
+void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crime_antigo,
+                       crime_t* crime_novo) {
     // se chamei aqui tenho a garantia de que o tamanho do crime antigo eh menor ou igual
     desloca_offset(arq_bin, byteOffset);
-    
+
     // Escreve campos fixos contiguamente
     fwrite(&(crime_novo->removido), sizeof(char), 1, arq_bin);
     fwrite(&(crime_novo->idCrime), sizeof(int), 1, arq_bin);
@@ -72,9 +74,10 @@ void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crim
 
     // Escreve campos variáveis com delimitadores e sem \0
     char delimitador = '|';
-    fwrite(crime_novo->lugarCrime, sizeof(char), (int) strlen(crime_novo->lugarCrime), arq_bin);
+    fwrite(crime_novo->lugarCrime, sizeof(char), (int)strlen(crime_novo->lugarCrime), arq_bin);
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
-    fwrite(crime_novo->descricaoCrime, sizeof(char), (int) strlen(crime_novo->descricaoCrime), arq_bin);
+    fwrite(crime_novo->descricaoCrime, sizeof(char), (int)strlen(crime_novo->descricaoCrime),
+           arq_bin);
     fwrite(&delimitador, sizeof(char), 1, arq_bin);
 
     // aqui tem lixo
@@ -89,11 +92,11 @@ void sobrescreve_crime(FILE* arq_bin, long long int byteOffset, int tamanho_crim
 
 /**
  * Insere crime ao final de arquivo binario
- * 
+ *
  * @param arq_bin
  * @param cabecalho
  * @param novo_crime
-*/
+ */
 void insere_no_final(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* novo_crime) {
     cabecalho->nroRegArq++;
     desloca_offset(arq_bin, cabecalho->proxByteOffset);
@@ -103,11 +106,11 @@ void insere_no_final(FILE* arq_bin, cabecalho_t* cabecalho, crime_t* novo_crime)
 
 /**
  * Seta consistencia do cabecalho
- * 
+ *
  * @param arq_bin
  * @param cabecalho
  * @param consistencia
-*/
+ */
 void seta_consistencia_bin(FILE* arq_bin, cabecalho_t* cabecalho, char consistencia) {
     desloca_offset(arq_bin, 0);
     cabecalho->status = consistencia;

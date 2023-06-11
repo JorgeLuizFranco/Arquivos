@@ -56,9 +56,7 @@ void sd_limpa(StringDinamica* ds) {
  * @param ds Ponteiro para o objeto StringDinamica.
  * @return Um ponteiro para a string terminada em nulo.
  */
-char* sd_obtem_string(StringDinamica* ds) {
-    return ds->str;
-}
+char* sd_obtem_string(StringDinamica* ds) { return ds->str; }
 
 /**
  * Destroi um objeto StringDinamica e libera sua memória.

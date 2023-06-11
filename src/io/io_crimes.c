@@ -3,16 +3,16 @@
 // arquivo com funcoes pra printar crimes ou ler da entrada
 
 /**
-*
-* Imprime uma string delimitada por caractere ou delimitada por tamanho.
-* Ou seja, imprime tanto uma string fixa quanto uma string dinamica
-*
-* @param string string a ser printada.
-*
-* @param tamanho tamanho da string, se aplicavel.
-*
-* @param delimitador caracter delimitador, se aplicavel
-*/
+ *
+ * Imprime uma string delimitada por caractere ou delimitada por tamanho.
+ * Ou seja, imprime tanto uma string fixa quanto uma string dinamica
+ *
+ * @param string string a ser printada.
+ *
+ * @param tamanho tamanho da string, se aplicavel.
+ *
+ * @param delimitador caracter delimitador, se aplicavel
+ */
 void mostra_string_delimitador(char* string, int tamanho, char delimitador) {
     if (tamanho == 0 || string[0] == delimitador) {
         // se o tamanho for 0 ou o primeiro caractere ja e o delimitador
@@ -37,13 +37,12 @@ void mostra_string_delimitador(char* string, int tamanho, char delimitador) {
     }
 }
 
-
 /**
-*
-* Função que mostra as informações de um crime na tela
-* @param crime_atual ponteiro para o crime a ser mostrado
-*
-*/
+ *
+ * Função que mostra as informações de um crime na tela
+ * @param crime_atual ponteiro para o crime a ser mostrado
+ *
+ */
 void mostra_crime_tela(crime_t* crime_atual) {
     if (crime_atual->removido == '1') return;
 
@@ -70,7 +69,7 @@ void mostra_crime_tela(crime_t* crime_atual) {
  * @param n_registros Número de crimes
  */
 void mostra_crimes_tela_arq(FILE* arq_bin, int n_registros) {
-    
+
     if (n_registros == 0) {
         printf("Registro inexistente.\n");
     }
@@ -84,11 +83,11 @@ void mostra_crimes_tela_arq(FILE* arq_bin, int n_registros) {
             return;
         }
 
-        if (crime_atual->removido != '1') { 
+        if (crime_atual->removido != '1') {
             mostra_crime_tela(crime_atual);
             n_registros--;
         }
-        
+
         libera_crime(crime_atual); // libera memória alocada
     }
 }
@@ -104,7 +103,7 @@ void mostra_crimes_tela_arq(FILE* arq_bin, int n_registros) {
 int copia_str_limitada(char* dest, char* src, int tamanho) {
     for (int i = 0; i < tamanho; i++)
         dest[i] = src[i];
-    
+
     return 1;
 }
 
@@ -117,10 +116,10 @@ int copia_str_limitada(char* dest, char* src, int tamanho) {
  * @return 0 se ocorre erro de alocação; 1 caso contrário
  */
 int copia_str_ilimitada(char** dest, char* src) {
-    *dest = (char*) malloc(sizeof(char)*(1+(int)strlen(src)));
+    *dest = (char*)malloc(sizeof(char) * (1 + (int)strlen(src)));
     if (*dest == NULL) return 0;
 
-    return copia_str_limitada(*dest, src, 1+(int)strlen(src));
+    return copia_str_limitada(*dest, src, 1 + (int)strlen(src));
 }
 
 /**
@@ -130,14 +129,14 @@ int copia_str_ilimitada(char** dest, char* src) {
  */
 crime_t* le_crime_tela() {
     char string_lida[100];
-    crime_t* crime = (crime_t*) malloc(sizeof(crime_t));
+    crime_t* crime = (crime_t*)malloc(sizeof(crime_t));
     if (crime == NULL) return NULL;
     crime->removido = '0';
     crime->lugarCrime = NULL;
     crime->descricaoCrime = NULL;
 
     le_campo_inteiro(&(crime->idCrime));
-    
+
     scan_quote_string(string_lida);
     copia_str_limitada(crime->dataCrime, string_lida, 10);
 
@@ -148,17 +147,17 @@ crime_t* le_crime_tela() {
         libera_crime(crime);
         return NULL;
     }
-    
+
     scan_quote_string(string_lida);
     if (copia_str_ilimitada(&(crime->descricaoCrime), string_lida) == 0) {
         libera_crime(crime);
         return NULL;
     }
-    
+
     scan_quote_string(string_lida);
     int tamanho_string = strlen(string_lida);
     copia_str_limitada(crime->marcaCelular, string_lida, tamanho_string);
-    
+
     for (int i = tamanho_string; i < 12; i++) {
         crime->marcaCelular[i] = '$';
     }

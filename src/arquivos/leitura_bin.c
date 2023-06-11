@@ -8,7 +8,7 @@
  *         Retorna NULL caso não seja possível alocar memória para a estrutura.
  */
 cabecalho_t* le_cabecalho_bin(FILE* arq_bin) {
-    cabecalho_t* cabecalho = (cabecalho_t*) malloc(sizeof(cabecalho_t));
+    cabecalho_t* cabecalho = (cabecalho_t*)malloc(sizeof(cabecalho_t));
 
     if (cabecalho == NULL) return NULL;
 
@@ -19,7 +19,6 @@ cabecalho_t* le_cabecalho_bin(FILE* arq_bin) {
 
     return cabecalho;
 }
-
 
 /**
  * Lê um campo de tamanho variável de um registro de crime no arquivo binário.
@@ -37,22 +36,24 @@ void le_campo_variavel_crime(char** campo, FILE* arq_bin, char delimitador) {
     do {
         fread(&caractere_atual, sizeof(char), 1, arq_bin);
         tamanho_string++;
-        *campo = (char*) realloc(*campo, tamanho_string);
-        (*campo)[tamanho_string-1] = caractere_atual;
+        *campo = (char*)realloc(*campo, tamanho_string);
+        (*campo)[tamanho_string - 1] = caractere_atual;
     } while (caractere_atual != delimitador);
 
-    (*campo)[tamanho_string-1] = '\0';
+    (*campo)[tamanho_string - 1] = '\0';
 }
 
 /**
- * 
- * Lê um registro do arquivo binário e retorna o ponteiro alocado para a struct crime_t contendo a informação lida
+ *
+ * Lê um registro do arquivo binário e retorna o ponteiro alocado para a struct crime_t contendo a
+ * informação lida
  *
  * @param arq_bin o arquivo binário do qual se lê
- * @return um ponteiro para uma sruct crime_t contendo a informação lida (ou NULL caso ocorra falha de alocação)
+ * @return um ponteiro para uma sruct crime_t contendo a informação lida (ou NULL caso ocorra falha
+ * de alocação)
  */
 crime_t* le_crime_bin(FILE* arq_bin) {
-    crime_t* crime = (crime_t*) malloc(sizeof(crime_t));
+    crime_t* crime = (crime_t*)malloc(sizeof(crime_t));
 
     if (crime == NULL) return NULL;
     char delimitador = '$';
@@ -66,7 +67,8 @@ crime_t* le_crime_bin(FILE* arq_bin) {
     le_campo_variavel_crime(&(crime->lugarCrime), arq_bin, '|');
     le_campo_variavel_crime(&(crime->descricaoCrime), arq_bin, '|');
 
-    crime->tamanho_real = tamanho_crime(crime) - 1; // por enquanto eh isso -1 (pq n contei # ainda) mas vai aumentando
+    crime->tamanho_real = tamanho_crime(crime) -
+                          1; // por enquanto eh isso -1 (pq n contei # ainda) mas vai aumentando
 
     // ler lixo ($), apenas para avançar o ponteiro
     while (delimitador != '#') {
@@ -78,11 +80,11 @@ crime_t* le_crime_bin(FILE* arq_bin) {
 
 /**
  * Lê crime com offset específico
- * 
+ *
  * @param arq_bin
  * @param byteOffset
  * @return crime no offset especificado
-*/
+ */
 crime_t* le_crime_bin_offset(FILE* arq_bin, long long int byteOffset) {
     desloca_offset(arq_bin, byteOffset);
     return le_crime_bin(arq_bin);

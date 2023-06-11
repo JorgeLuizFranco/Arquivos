@@ -47,7 +47,7 @@ void le_dado_str(FILE* arq_indices, dados_str_t** dado_str) {
  *
  * @param arq_indices Arquivo binário que será lido.
  * @param dado_gen ponteiro que referencia a estrutura que armazenará o dado lido (antes do cast)
- * @param tipo_var tipo de índice genérico (de string(1) ou de int(0)) 
+ * @param tipo_var tipo de índice genérico (de string(1) ou de int(0))
  */
 void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
     if (tipoVar == 0) {
@@ -62,11 +62,12 @@ void le_dado_gen(FILE* arq_indices, void** dado_gen, int tipoVar) {
  *
  * @param arq_indices Arquivo binário que será lido.
  * @param dados lista de dados genericos
- * @param tipo_var tipo de índice genérico (de string(1) ou de int(0)) 
+ * @param tipo_var tipo de índice genérico (de string(1) ou de int(0))
  * @param cabecalho_indice ponteiro que referencia a estrutura que armazenará o cabeçalho lido
  * @param num_ind referenciaa a int que armazenará número de índices
  */
-int le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_indice_t** cabecalho_indice, int* num_ind) {
+int le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar,
+                   cabecalho_indice_t** cabecalho_indice, int* num_ind) {
     *num_ind = 0;
     if (arq_indices == NULL) return -1;
 
@@ -90,21 +91,21 @@ int le_arq_indices(FILE* arq_indices, void*** dados, int tipoVar, cabecalho_indi
         if (dado_atual == NULL) {
             free(*cabecalho_indice);
             *cabecalho_indice = NULL;
-            libera_vetor_ate_pos(*dados, num_dados-1);
+            libera_vetor_ate_pos(*dados, num_dados - 1);
             *dados = NULL;
             return 0;
         }
-        void** dados_realloc = (void**) realloc(*dados, (++num_dados)*get_tam_var(tipoVar));
+        void** dados_realloc = (void**)realloc(*dados, (++num_dados) * get_tam_var(tipoVar));
         if (dados_realloc == NULL) {
             free(dado_atual);
             free(*cabecalho_indice);
             *cabecalho_indice = NULL;
-            libera_vetor_ate_pos(*dados, num_dados-2);
+            libera_vetor_ate_pos(*dados, num_dados - 2);
             *dados = NULL;
             return 0;
         }
         *dados = dados_realloc;
-        (*dados)[num_dados-1] = dado_atual;
+        (*dados)[num_dados - 1] = dado_atual;
     }
 
     return 1;

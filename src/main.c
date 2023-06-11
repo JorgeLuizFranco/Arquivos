@@ -4,14 +4,13 @@
  * VEJA O README DA RAIZ DO ZIP PARA MAIS INFORMAÇÕES
  */
 
-
 #include "funcionalidades.h"
 
 int main() {
     // le a primeira linha da entrada do usuário e chama a funcionalidade
     // correspondente
     // as funções estão em funcionalidades.c
-    
+
     int funcao;
     char nome_arq_csv[100];
     char nome_arq_bin[100];
@@ -21,53 +20,51 @@ int main() {
     int num_consultas;
 
     scanf("%d", &funcao);
-    
 
     switch (funcao) {
-        case 1:
-            scanf("%s %s", nome_arq_csv, nome_arq_bin);
-            csv_para_bin(nome_arq_csv, nome_arq_bin);
-            break;
+    case 1:
+        scanf("%s %s", nome_arq_csv, nome_arq_bin);
+        csv_para_bin(nome_arq_csv, nome_arq_bin);
+        break;
 
-        case 2:
-            scanf("%s", nome_arq_bin);
-            mostra_crimes_tela(nome_arq_bin);
-            break;
-        
-        case 3:
-            
+    case 2:
+        scanf("%s", nome_arq_bin);
+        mostra_crimes_tela(nome_arq_bin);
+        break;
 
-            scanf("%s %s %s %s", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx);
-            cria_arq_indices(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx);
+    case 3:
 
-            break;
-        
-        case 4:
+        scanf("%s %s %s %s", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx);
+        cria_arq_indices(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx);
 
-            scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
-            procura_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+        break;
 
-            break;
-        
-        case 5:
+    case 4:
 
-            scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
-            remove_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+        scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+        procura_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
-            break;
-        
-        case 6:
+        break;
 
-            scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
-            insere_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+    case 5:
 
-            break;
-        
-        case 7:
+        scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+        remove_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
-            scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
-            atualiza_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+        break;
 
-            break;
+    case 6:
+
+        scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+        insere_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+
+        break;
+
+    case 7:
+
+        scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+        atualiza_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+
+        break;
     }
 }
