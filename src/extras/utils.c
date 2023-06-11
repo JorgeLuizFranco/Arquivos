@@ -1,15 +1,15 @@
 #include "utils.h"
-#include<string.h>
 #include <ctype.h>
+#include <string.h>
 
 // arquivo com diversas funções utilitárias usadas ao longo de todos os arquivos
 
 /**
  * Função fornecida
- * 
+ *
  * @param nomeArquivoBinario
-*/
-void binarioNaTela(char *nomeArquivoBinario) {
+ */
+void binarioNaTela(char* nomeArquivoBinario) {
     /*
      * Você não precisa entender o código dessa função.
      *
@@ -20,21 +20,20 @@ void binarioNaTela(char *nomeArquivoBinario) {
      */
 
     unsigned long i, cs;
-    unsigned char *mb;
+    unsigned char* mb;
     size_t fl;
-    FILE *fs;
+    FILE* fs;
     if (nomeArquivoBinario == NULL || !(fs = fopen(nomeArquivoBinario, "rb"))) {
-        fprintf(stderr,
-                "ERRO AO ESCREVER O BINARIO NA TELA (função binarioNaTela): "
-                "não foi possível abrir o arquivo que me passou para leitura. "
-                "Ele existe e você tá passando o nome certo? Você lembrou de "
-                "fechar ele com fclose depois de usar?\n");
+        fprintf(stderr, "ERRO AO ESCREVER O BINARIO NA TELA (função binarioNaTela): "
+                        "não foi possível abrir o arquivo que me passou para leitura. "
+                        "Ele existe e você tá passando o nome certo? Você lembrou de "
+                        "fechar ele com fclose depois de usar?\n");
         return;
     }
     fseek(fs, 0, SEEK_END);
     fl = ftell(fs);
     fseek(fs, 0, SEEK_SET);
-    mb = (unsigned char *)malloc(fl);
+    mb = (unsigned char*)malloc(fl);
     fread(mb, 1, fl, fs);
 
     cs = 0;
@@ -48,10 +47,10 @@ void binarioNaTela(char *nomeArquivoBinario) {
 
 /**
  * Função fornecida
- * 
+ *
  * @param str string em que e guardada o resultado do escaneamento
-*/
-void scan_quote_string(char *str) {
+ */
+void scan_quote_string(char* str) {
     /*
      * Use essa função para ler um campo string delimitado entre aspas (").
      * Chame ela na hora que for ler tal campo. Por exemplo:
@@ -69,44 +68,41 @@ void scan_quote_string(char *str) {
     char R;
 
     while ((R = getchar()) != EOF && isspace(R)) {
-        ;  // ignorar espaços, \r, \n...
+        ; // ignorar espaços, \r, \n...
     }
 
-    if (R == 'N' || R == 'n') {  // campo NULO
+    if (R == 'N' || R == 'n') { // campo NULO
         getchar();
         getchar();
-        getchar();  // ignorar o "ULO" de NULO.
-        strcpy(str, "");  // copia string vazia
+        getchar();       // ignorar o "ULO" de NULO.
+        strcpy(str, ""); // copia string vazia
     } else if (R == '\"') {
-        if (scanf("%[^\"]", str) != 1) {  // ler até o fechamento das aspas
+        if (scanf("%[^\"]", str) != 1) { // ler até o fechamento das aspas
             strcpy(str, "");
         }
-        getchar();  // ignorar aspas fechando
-    } else if (R != EOF) {  // vc tá tentando ler uma string
-                            // que não tá entre aspas!
-                            // Fazer leitura normal %s então,
-                            // pois deve ser algum inteiro ou algo assim...
+        getchar();         // ignorar aspas fechando
+    } else if (R != EOF) { // vc tá tentando ler uma string
+                           // que não tá entre aspas!
+                           // Fazer leitura normal %s então,
+                           // pois deve ser algum inteiro ou algo assim...
         str[0] = R;
         scanf("%s", &str[1]);
-    } else {  // EOF
+    } else { // EOF
         strcpy(str, "");
     }
 }
 
-
 /**
  * Função que imprime na tela que ocorreu um erro
-*/
-void erro() {
-    printf("Falha no processamento do arquivo.\n");
-}
+ */
+void erro() { printf("Falha no processamento do arquivo.\n"); }
 
 /**
- * Função que dá free em cada lugar do vetor até uma certa posição e depois da free 
+ * Função que dá free em cada lugar do vetor até uma certa posição e depois da free
  * no ponteiro associado ao vetor em si
  * @param vetor vetor generico
  * @param pos posicao ate a qual eu limpo
-*/
+ */
 void libera_vetor_ate_pos(void** vetor, int pos) {
     for (int i = 0; i <= pos; i++)
         free(vetor[i]);
@@ -116,7 +112,7 @@ void libera_vetor_ate_pos(void** vetor, int pos) {
 /**
  * Usada na funcao realiza_consultas diversas vezes
  * Libera memoria e fecha arquivos
- * 
+ *
  * @param flag_erro se =0, nao chama erro() caso algo aconteca. se=1, chama
  * @param arq_bin
  * @param cabecalho
@@ -126,24 +122,53 @@ void libera_vetor_ate_pos(void** vetor, int pos) {
  * @param num_campos
  * @param dados
  * @param num_dados
-*/
-void libera_memo_consultas(int flag_erro, FILE* arq_bin, cabecalho_t* cabecalho, FILE* arq_idx, cabecalho_indice_t* cabecalho_indice, campo_busca_t** campos, int num_campos, void** dados, int num_dados) {
+ */
+void libera_memo_consultas(int flag_erro, FILE* arq_bin, cabecalho_t* cabecalho, FILE* arq_idx,
+                           cabecalho_indice_t* cabecalho_indice, campo_busca_t** campos,
+                           int num_campos, void** dados, int num_dados) {
 
     if (cabecalho_indice != NULL) free(cabecalho_indice);
-    if (arq_idx != NULL) fclose(arq_idx);    
-    if (dados != NULL) libera_vetor_ate_pos(dados, num_dados-1);
+    if (arq_idx != NULL) fclose(arq_idx);
+    if (dados != NULL) libera_vetor_ate_pos(dados, num_dados - 1);
     if (cabecalho != NULL) free(cabecalho);
     if (arq_bin != NULL) fclose(arq_bin);
-    if (campos != NULL) libera_vetor_ate_pos((void**)campos, num_campos-1);
+    if (campos != NULL) libera_vetor_ate_pos((void**)campos, num_campos - 1);
 
     if (flag_erro) erro();
+}
+
+/**
+ * TODO
+ */
+void fecha_arquivos(int num_arqs, ...) {
+    va_list argumentos;
+    va_start(argumentos, num_arqs);
+    FILE* arq_atual = NULL;
+    for (int i = 0; i < num_arqs; i++) {
+        arq_atual = va_arg(argumentos, FILE*);
+        if (arq_atual != NULL) fclose(arq_atual);
+    }
+    va_end(argumentos);
+}
+
+/**
+ * TODO
+ */
+void libera_memo(int num_ponts, ...) {
+    va_list argumentos;
+    va_start(argumentos, num_ponts);
+    void* pont_atual = NULL;
+    for (int i = 0; i < num_ponts; i++) {
+        pont_atual = va_arg(argumentos, void*);
+        if (pont_atual != NULL) free(pont_atual);
+    }
 }
 
 /**
  * Faz um fseek para um offset específico
  * @param arq_bin
  * @param byteOffset
-*/
+ */
 void desloca_offset(FILE* arq_bin, long long int byteOffset) {
     long long int posicao = ftell(arq_bin);
     fseek(arq_bin, byteOffset - posicao, SEEK_CUR);
@@ -160,8 +185,10 @@ void desloca_offset(FILE* arq_bin, long long int byteOffset) {
  * @param tipoVar
  * @param num_ind
  * @return 0 se ocorreu erro, 1 se deu tudo certo
-*/
-int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* nome_arq_idx, cabecalho_t** cabecalho, cabecalho_indice_t** cabecalho_indice, void*** dados, int tipoVar, int* num_ind) {
+ */
+int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* nome_arq_idx,
+                     cabecalho_t** cabecalho, cabecalho_indice_t** cabecalho_indice, void*** dados,
+                     int tipoVar, int* num_ind) {
     *arq_bin = fopen(nome_arq_bin, "rb+");
     if (*arq_bin == NULL) {
         erro();
@@ -183,7 +210,7 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
         erro();
         return 0;
     }
-    
+
     *cabecalho_indice = NULL;
     *dados = NULL;
     if (le_arq_indices(*arq_idx, dados, tipoVar, cabecalho_indice, num_ind) <= 0) {
@@ -195,4 +222,3 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
 
     return 1;
 }
-
