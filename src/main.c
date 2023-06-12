@@ -4,7 +4,7 @@
  * VEJA O README DA RAIZ DO ZIP PARA MAIS INFORMAÇÕES
  */
 
-#include "./funcionalidades.h"
+#include "./funcionalidades/funcionalidades.h"
 
 int main() {
     // le a primeira linha da entrada do usuário e chama a funcionalidade

@@ -1,17 +1,17 @@
 #ifndef FUNCIONALIDADES_H
 #define FUNCIONALIDADES_H
 
-#include "./arquivos/arvb/escrita_arvoreb.h"
-#include "./arquivos/indice/escrita_bin_ind.h"
-#include "./arquivos/indice/leitura_bin_ind.h"
-#include "./arquivos/leitura_csv.h"
-#include "./arquivos/registros/escrita_bin.h"
-#include "./arquivos/registros/leitura_bin.h"
-#include "./arvb_ops/arvb_busca.h"
-#include "./extras/utils.h"
-#include "./indice_ops/consultas.h"
-#include "./indice_ops/insercao.h"
-#include "./io/io_crimes.h"
+#include "../arquivos/arvb/escrita_arvoreb.h"
+#include "../arquivos/indice/escrita_bin_ind.h"
+#include "../arquivos/indice/leitura_bin_ind.h"
+#include "../arquivos/leitura_csv.h"
+#include "../arquivos/registros/escrita_bin.h"
+#include "../arquivos/registros/leitura_bin.h"
+#include "../arvb_ops/arvb_busca.h"
+#include "../extras/utils.h"
+#include "../indice_ops/consultas.h"
+#include "../indice_ops/insercao.h"
+#include "../io/io_crimes.h"
 
 // Funcionalidade 1. A partir de um nome de arquivo csv e nome de arquivo binário,
 // faz um binário com os registros descritos no csv
