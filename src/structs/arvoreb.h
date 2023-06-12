@@ -1,7 +1,7 @@
 #ifndef ARVOREB_H
 #define ARVOREB_H
 
-#include "indices.h"
+#include "./indices.h"
 #include <stdlib.h>
 
 #define ORDEM_ARVORE 5

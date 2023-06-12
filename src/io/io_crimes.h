@@ -3,7 +3,7 @@
 
 // comentado no .c
 
-#include "../arquivos/leitura_bin.h"
+#include "../arquivos/registros/leitura_bin.h"
 #include "../extras/utils.h"
 #include <stdio.h>
 

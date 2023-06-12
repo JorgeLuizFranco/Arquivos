@@ -3,8 +3,8 @@
 
 // mais detalhes no .c
 
-#include "registros.h"
-#include "utils_structs.h"
+#include "./registros.h"
+#include "./utils_structs.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

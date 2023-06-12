@@ -1,4 +1,4 @@
-#include "io_crimes.h"
+#include "./io_crimes.h"
 
 // arquivo com funcoes pra printar crimes ou ler da entrada
 

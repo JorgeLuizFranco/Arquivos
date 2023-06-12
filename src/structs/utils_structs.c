@@ -1,4 +1,4 @@
-#include "utils_structs.h"
+#include "./utils_structs.h"
 
 // basicamente fornece algumas funções pros arquivos dessa pasta "structs"
 // não coloquei tudo em "extras/utils" porque "extras/utils" precisa

@@ -1,4 +1,4 @@
-#include "leitura_bin_ind.h"
+#include "./leitura_bin_ind.h"
 
 /**
  * Lê o cabeçalho do arquivo binário de índicess contendo os metadados do arquivo.

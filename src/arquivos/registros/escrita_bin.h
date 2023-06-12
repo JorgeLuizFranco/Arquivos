@@ -3,8 +3,8 @@
 
 // explicacao no .c
 
-#include "../extras/utils.h"
-#include "../structs/registros.h"
+#include "../../extras/utils.h"
+#include "../../structs/registros.h"
 #include <stdio.h>
 
 void escreve_cabecalho(FILE* arq_bin, cabecalho_t* cabecalho);

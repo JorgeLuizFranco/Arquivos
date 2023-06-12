@@ -1,4 +1,4 @@
-#include "leitura_csv.h"
+#include "./leitura_csv.h"
 
 /**
  * A função le_linha_registro_criminal recebe uma string contendo os dados

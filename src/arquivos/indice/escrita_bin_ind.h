@@ -3,12 +3,12 @@
 
 // escreve .c
 
-#include "../extras/utils.h"
-#include "../structs/indices.h"
-#include "leitura_bin.h"
+#include "../../extras/utils.h"
+#include "../../structs/indices.h"
+#include "../registros/leitura_bin.h"
 #include <stdio.h>
 
-#include "../io/io_crimes.h"
+#include "../../io/io_crimes.h"
 
 void escreve_arq_ind(FILE* arq_bin, FILE* arq_ind, char* nome_campo, char* tipo_campo,
                      int nro_registros, long long int byteOffset_reg);

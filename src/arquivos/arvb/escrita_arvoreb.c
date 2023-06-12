@@ -1,4 +1,4 @@
-#include "escrita_arvoreb.h"
+#include "./escrita_arvoreb.h"
 
 void escreve_cab_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb) {
     fwrite(&(cab_arvb->status), sizeof(char), 1, arq_arvb);

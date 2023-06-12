@@ -3,15 +3,15 @@
 
 // comentado no .c
 
-#include "./arquivos/escrita_bin.h"
-#include "./arquivos/escrita_bin_ind.h"
-#include "./arquivos/leitura_bin.h"
-#include "./arquivos/leitura_bin_ind.h"
-#include "./extras/utils.h"
-#include "./io/io_crimes.h"
-#include "./structs/campos.h"
-#include "./structs/indices.h"
-#include "./structs/registros.h"
+#include "../arquivos/indice/escrita_bin_ind.h"
+#include "../arquivos/indice/leitura_bin_ind.h"
+#include "../arquivos/registros/escrita_bin.h"
+#include "../arquivos/registros/leitura_bin.h"
+#include "../extras/utils.h"
+#include "../io/io_crimes.h"
+#include "../structs/campos.h"
+#include "../structs/indices.h"
+#include "../structs/registros.h"
 #include <string.h>
 
 void busca_bin_campos(void** ind_int, int num_regs, int* low_reg, int* high_reg, void* chaveBusca,

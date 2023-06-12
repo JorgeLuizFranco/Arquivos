@@ -1,4 +1,4 @@
-#include "busca.h"
+#include "./busca.h"
 
 /**
  * Faz uma busca binária nos índices e com isso define baixo_reg e alto_reg

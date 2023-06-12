@@ -1,4 +1,4 @@
-#include "insercao.h"
+#include "./insercao.h"
 
 /**
  * Dado um void* dado (registro de índice genérico), insere ele numa lista de dados

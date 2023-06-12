@@ -1,4 +1,4 @@
-#include "arvb_busca.h"
+#include "./arvb_busca.h"
 
 int busca_arvb(FILE* arq_bin, FILE* arq_arv, cab_arvb_t* cab_arvb, cabecalho_t* cab_arq_bin,
                campo_busca_t** campos, int num_campos, char* nome_campo) {

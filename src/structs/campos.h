@@ -1,8 +1,8 @@
 #ifndef CAMPOS_H
 #define CAMPOS_H
 
-#include "registros.h"
-#include "utils_structs.h"
+#include "./registros.h"
+#include "./utils_structs.h"
 #include <stdio.h>
 
 // mais detalhes no .c

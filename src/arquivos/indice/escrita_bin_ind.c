@@ -1,4 +1,4 @@
-#include "escrita_bin_ind.h"
+#include "./escrita_bin_ind.h"
 
 /**
  * escreve cabeçalho do arquivo de índices

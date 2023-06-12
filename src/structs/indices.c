@@ -1,4 +1,4 @@
-#include "indices.h"
+#include "./indices.h"
 
 /**
  * cria cabeçalho do arquivo de índices

@@ -1,9 +1,9 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include "../arquivos/leitura_arvoreb.h"
-#include "../arquivos/leitura_bin.h"
-#include "../arquivos/leitura_bin_ind.h"
+#include "../arquivos/arvb/leitura_arvoreb.h"
+#include "../arquivos/indice/leitura_bin_ind.h"
+#include "../arquivos/registros/leitura_bin.h"
 #include "../structs/arvoreb.h"
 #include "../structs/campos.h"
 #include "../structs/indices.h"

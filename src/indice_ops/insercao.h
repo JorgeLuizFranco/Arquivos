@@ -1,13 +1,13 @@
 #ifndef INSERCAO_H
 #define INSERCAO_H
 // comentado no .c
-#include "./arquivos/escrita_bin.h"
-#include "./arquivos/escrita_bin_ind.h"
-#include "./arquivos/leitura_bin.h"
-#include "./arquivos/leitura_bin_ind.h"
-#include "./extras/utils.h"
-#include "./structs/registros.h"
-#include "busca.h"
+#include "../arquivos/indice/escrita_bin_ind.h"
+#include "../arquivos/indice/leitura_bin_ind.h"
+#include "../arquivos/registros/escrita_bin.h"
+#include "../arquivos/registros/leitura_bin.h"
+#include "../extras/utils.h"
+#include "../structs/registros.h"
+#include "./busca.h"
 #include <stdio.h>
 
 int insere_crime_binario(FILE* arq_bin, cabecalho_t* cabecalho,

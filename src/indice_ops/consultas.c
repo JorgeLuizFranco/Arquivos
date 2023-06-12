@@ -1,4 +1,4 @@
-#include "consultas.h"
+#include "./consultas.h"
 
 // esse arquivo serve só pra separar essa função pra deixar o resto do código mais limpo
 

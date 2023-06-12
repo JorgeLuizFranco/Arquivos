@@ -1,4 +1,4 @@
-#include "escrita_bin.h"
+#include "./escrita_bin.h"
 
 /**
  * Escreve o cabeçalho do arquivo binário no disco.

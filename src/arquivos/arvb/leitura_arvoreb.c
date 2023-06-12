@@ -1,4 +1,4 @@
-#include "leitura_arvoreb.h"
+#include "./leitura_arvoreb.h"
 
 cab_arvb_t* le_cab_arvb(FILE* arq_arvb) {
     cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb));

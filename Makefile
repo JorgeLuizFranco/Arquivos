@@ -5,7 +5,7 @@ EXEC=programa
 SRC_FOLDER=src
 BUILD_FOLDER=build
 
-SRC_FILES=$(wildcard $(SRC_FOLDER)/*.c) $(wildcard $(SRC_FOLDER)/**/*.c)
+SRC_FILES=$(wildcard $(SRC_FOLDER)/*.c) $(wildcard $(SRC_FOLDER)/**/*.c) $(wildcard $(SRC_FOLDER)/**/**/*.c)
 
 OBJ_FOLDER=$(BUILD_FOLDER)/obj
 OBJ_FILES=$(patsubst $(SRC_FOLDER)/%.c, $(OBJ_FOLDER)/%.o, $(SRC_FILES))

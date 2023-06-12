@@ -1,4 +1,4 @@
-#include "leitura_bin.h"
+#include "./leitura_bin.h"
 
 /**
  * Lê o cabeçalho do arquivo binário contendo os metadados do arquivo.

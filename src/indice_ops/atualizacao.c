@@ -1,4 +1,4 @@
-#include "atualizacao.h"
+#include "./atualizacao.h"
 
 // basicamente esse arquivo so foi criado para essas duas funções não ficarem jogadas
 

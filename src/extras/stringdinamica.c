@@ -1,4 +1,4 @@
-#include "stringdinamica.h"
+#include "./stringdinamica.h"
 
 /**
  * Constrói um novo objeto StringDinamica.
