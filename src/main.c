@@ -77,5 +77,12 @@ int main() {
         arvb_procura_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
 
         break;
+
+    case 10:
+
+        scanf("%s %s %s %s %d", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, &num_consultas);
+        arvb_insere_registros(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx, num_consultas);
+
+        break;
     }
 }

@@ -1,6 +1,7 @@
 #ifndef FUNCIONALIDADES_H
 #define FUNCIONALIDADES_H
 
+#include "./arquivos/escrita_arvoreb.h"
 #include "./arquivos/escrita_bin.h"
 #include "./arquivos/escrita_bin_ind.h"
 #include "./arquivos/leitura_bin.h"
@@ -56,5 +57,9 @@ void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, 
 // Funcionalidade 9
 void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
                             char* nome_arq_arvb, int num_consultas);
+
+// Funcionalidade 10
+void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
+                           char* nome_arq_arvb, int num_consultas);
 
 #endif

@@ -25,3 +25,9 @@ void escreve_no_arvb(FILE* arq_arvb, no_t* no, int nivel) {
 
     fwrite(&(no->ponteiro[ORDEM_ARVORE - 1]), sizeof(int), 1, arq_arvb);
 }
+
+void seta_consistencia_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb, char consistencia) {
+    desloca_offset(arq_arvb, 0);
+    cab_arvb->status = consistencia;
+    escreve_cab_arvb(arq_arvb, cab_arvb);
+}

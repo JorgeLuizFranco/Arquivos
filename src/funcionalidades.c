@@ -247,7 +247,6 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     fclose(arq_bin);
 
     // finaliza a escrita do arquivo de índices
-    desloca_offset(arq_idx, 0);
     seta_consistencia_ind(arq_idx, cabecalho_indice, '1');
     escreve_dados_gen(arq_idx, dados, tipoVar, cabecalho_indice->nro_reg);
     fclose(arq_idx);
@@ -327,4 +326,56 @@ void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_cam
 
     fecha_arquivos(2, arq_arvb, arq_bin);
     libera_memo(2, cab_arvb, cab_arq_bin);
+}
+
+/**
+ * FUNCIONALIDADE 10
+ * insere registro na arvore B
+ */
+void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
+                           char* nome_arq_arvb, int num_consultas) {
+
+    if (tipo_campo[0] == 's') {
+        erro();
+        return;
+    }
+
+    FILE* arq_bin;
+    FILE* arq_arvb;
+    cabecalho_t* cab_arq_bin;
+    cab_arvb_t* cab_arvb;
+    if (abre_arq_bin_arv(&arq_bin, nome_arq_bin, &arq_arvb, nome_arq_arvb, &cab_arq_bin,
+                         &cab_arvb) == 0) {
+        erro();
+        return;
+    }
+
+    seta_consistencia_arvb(arq_arvb, cab_arvb, '0');
+    seta_consistencia_bin(arq_bin, cab_arq_bin, '0');
+
+    desloca_offset(arq_bin, cab_arq_bin->proxByteOffset); // insere no final entao ja desloca
+    crime_t* crime_atual = NULL;
+    for (int i = 0; i < num_consultas; i++) {
+        crime_atual = le_crime_tela();
+        if (crime_atual == NULL) {
+            fecha_arquivos(2, arq_arvb, arq_bin);
+            libera_memo(2, cab_arq_bin, cab_arvb);
+            erro();
+            return;
+        }
+
+        escreve_registro_criminal(arq_bin, crime_atual);
+        cab_arq_bin->nroRegArq++;
+        cab_arq_bin->proxByteOffset += crime_atual->tamanho_real;
+
+        libera_crime(crime_atual);
+    }
+
+    seta_consistencia_arvb(arq_arvb, cab_arvb, '1');
+    seta_consistencia_bin(arq_bin, cab_arq_bin, '1');
+    fecha_arquivos(2, arq_arvb, arq_bin);
+    libera_memo(2, cab_arq_bin, cab_arvb);
+
+    binarioNaTela(nome_arq_bin);
+    binarioNaTela(nome_arq_arvb);
 }
