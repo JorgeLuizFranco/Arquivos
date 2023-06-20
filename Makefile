@@ -27,5 +27,10 @@ run:
 	./programa
 
 zip:
-	zip -r trabalho1_arquivos.zip Makefile README.md src/
+	zip -r trabalho2_arquivos.zip Makefile README.md src/
 
+restore:
+	rm -rf ./binarios/*
+	cp -r ./binarios_originais/* ./binarios
+	rm -rf ./indices/*
+	cp -r ./indices_originais/* ./indices

@@ -162,6 +162,8 @@ crime_t* le_crime_tela() {
         crime->marcaCelular[i] = '$';
     }
 
+    crime->tamanho_real = tamanho_crime(crime);
+
     return crime;
 }
 

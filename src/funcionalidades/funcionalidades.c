@@ -273,6 +273,68 @@ void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, 
 }
 
 /**
+ *
+ * FUNCIONALIDADE 8
+ *
+ */
+void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_arvb) {
+    if (tipo_campo[0] == 's') {
+        erro();
+        return;
+    }
+
+    FILE* arq_bin;
+    FILE* arq_arvb;
+    cabecalho_t* cab_arq_bin;
+    if (abre_arq_bin_arv(&arq_bin, nome_arq_bin, &arq_arvb, nome_arq_arvb, &cab_arq_bin, NULL) ==
+        0) {
+        erro();
+        return;
+    }
+
+    cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb));
+    if (cab_arvb == NULL) {
+        libera_memo(1, cab_arq_bin);
+        fecha_arquivos(2, arq_bin, arq_arvb);
+        erro();
+        return;
+    }
+    cab_arvb->nroChaves = 0;
+    cab_arvb->status = '0';
+    cab_arvb->noRaiz = -1;
+    cab_arvb->nroNiveis = 0;
+    cab_arvb->proxRRN = 0;
+    escreve_cab_arvb(arq_arvb, cab_arvb);
+
+    crime_t* crime_atual = NULL;
+    long long int byteoffset_atual = TAMANHO_CABECALHO;
+
+    while (byteoffset_atual < cab_arq_bin->proxByteOffset) {
+        crime_atual = le_crime_bin(arq_bin);
+        if (crime_atual == NULL) {
+            libera_memo(2, cab_arq_bin, cab_arvb);
+            fecha_arquivos(2, arq_arvb, arq_bin);
+            erro();
+            return;
+        }
+
+        if (crime_atual->removido != '1') {
+            insere_crime_arvb(arq_arvb, cab_arvb, nome_campo, crime_atual, byteoffset_atual);
+        }
+
+        byteoffset_atual += crime_atual->tamanho_real;
+        libera_crime(crime_atual);
+    }
+
+    seta_consistencia_arvb(arq_arvb, cab_arvb, '1');
+
+    libera_memo(2, cab_arq_bin, cab_arvb);
+    fecha_arquivos(2, arq_arvb, arq_bin);
+
+    binarioNaTela(nome_arq_arvb);
+}
+
+/**
  * FUNCIONALIDADE 9
  * Procura registros em arquivo de índices árvore b
  */
@@ -363,6 +425,8 @@ void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_camp
             erro();
             return;
         }
+
+        insere_crime_arvb(arq_arvb, cab_arvb, nome_campo, crime_atual, cab_arq_bin->proxByteOffset);
 
         escreve_registro_criminal(arq_bin, crime_atual);
         cab_arq_bin->nroRegArq++;

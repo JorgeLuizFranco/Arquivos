@@ -245,17 +245,24 @@ int abre_arq_bin_arv(FILE** arq_bin, char* nome_arq_bin, FILE** arq_arv, char* n
         return 0;
     }
 
-    *arq_arv = fopen(nome_arq_arv, "rb");
+    if (cab_arvb == NULL)
+        *arq_arv = fopen(nome_arq_arv, "wb+");
+    else
+        *arq_arv = fopen(nome_arq_arv, "rb+");
+
     if (*arq_arv == NULL) {
         fecha_arquivos(1, *arq_bin);
         libera_memo(1, *cab_arq_bin);
         return 0;
     }
-    *cab_arvb = le_cab_arvb(*arq_arv);
-    if (*cab_arvb == NULL || (*cab_arvb)->status == '0') {
-        fecha_arquivos(2, *arq_bin, *arq_arv);
-        libera_memo(2, *cab_arvb, *cab_arq_bin);
-        return 0;
+
+    if (cab_arvb != NULL) {
+        *cab_arvb = le_cab_arvb(*arq_arv);
+        if (*cab_arvb == NULL || (*cab_arvb)->status == '0') {
+            fecha_arquivos(2, *arq_bin, *arq_arv);
+            libera_memo(2, *cab_arvb, *cab_arq_bin);
+            return 0;
+        }
     }
 
     return 1;

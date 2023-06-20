@@ -32,6 +32,15 @@ no_t* le_no_arvb(FILE* arq_arvb) {
     }
 
     fread(&(no->ponteiro[ORDEM_ARVORE - 1]), sizeof(int), 1, arq_arvb);
+    setam1_chaves(no, ORDEM_ARVORE - 1, ORDEM_ARVORE - 1);
+    setam1_ponts(no, ORDEM_ARVORE, ORDEM_ARVORE);
 
     return no;
+}
+
+long long int byteoffset_no(int rrn_no) { return 1LL * TAMANHO_PAGINA_ARVB * (rrn_no + 1); }
+
+no_t* pega_no_rrn(FILE* arq_arvb, int rrn_no) {
+    desloca_offset(arq_arvb, byteoffset_no(rrn_no));
+    return le_no_arvb(arq_arvb);
 }

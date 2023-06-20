@@ -8,6 +8,7 @@
 #include "../arquivos/registros/escrita_bin.h"
 #include "../arquivos/registros/leitura_bin.h"
 #include "../arvb_ops/arvb_busca.h"
+#include "../arvb_ops/arvb_insercao.h"
 #include "../extras/utils.h"
 #include "../indice_ops/consultas.h"
 #include "../indice_ops/insercao.h"
@@ -53,6 +54,9 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 // atualiza os registros informados pelo usuário da maneira como ele especificou
 void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx,
                         int num_consultas);
+
+// Funcionalidade 8
+void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_arvb);
 
 // Funcionalidade 9
 void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,

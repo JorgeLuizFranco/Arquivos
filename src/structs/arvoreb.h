@@ -10,8 +10,8 @@ static const int TAMANHO_PAGINA_ARVB = 76;
 
 typedef struct No no_t;
 struct No {
-    int ponteiro[ORDEM_ARVORE];
-    dados_int_t chaves[ORDEM_ARVORE - 1];
+    int ponteiro[ORDEM_ARVORE + 1]; // +1 pra auxiliar
+    dados_int_t chaves[(ORDEM_ARVORE - 1) + 1];
     int num_chaves;
     int nivel;
 };
@@ -27,5 +27,9 @@ struct Cabecalho_Arvoreb {
 
 int busca_bin_no(no_t* no_atual, dados_int_t* chave);
 void debuga_no(no_t* no_atual);
+
+no_t* aloca_no();
+void setam1_chaves(no_t* no, int ini, int end);
+void setam1_ponts(no_t* no, int ini, int end);
 
 #endif

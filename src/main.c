@@ -69,6 +69,9 @@ int main() {
 
     case 8:
 
+        scanf("%s %s %s %s", nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx);
+        arvb_cria_indice(nome_arq_bin, nome_campo, tipo_campo, nome_arq_idx);
+
         break;
 
     case 9:

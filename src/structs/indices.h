@@ -54,6 +54,8 @@ void* pega_chave_generico(void* dado_generico, int tipoVar);
 
 long long int pega_offset_generico(void* dado_generico, int tipoVar);
 
+void copia_dado_gen(void* dest_dado, void* src_dado, int tipoVar);
+
 void remove_dado(void*** vetor_dados, int tipoVar, int* tam_vetor, int pos_dado);
 
 int get_tipo_var(char* nome_tipo);

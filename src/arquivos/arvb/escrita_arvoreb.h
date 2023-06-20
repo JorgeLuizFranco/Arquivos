@@ -6,7 +6,8 @@
 #include <stdio.h>
 
 void escreve_cab_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb);
-void escreve_no_arvb(FILE* arq_arvb, no_t* no, int nivel);
+void escreve_no_arvb(FILE* arq_arvb, no_t* no);
 void seta_consistencia_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb, char consistencia);
+void escreve_no_rrn(FILE* arq_arvb, no_t* no, int rrn_no);
 
 #endif

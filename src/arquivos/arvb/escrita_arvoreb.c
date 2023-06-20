@@ -2,9 +2,9 @@
 
 void escreve_cab_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb) {
     fwrite(&(cab_arvb->status), sizeof(char), 1, arq_arvb);
+    fwrite(&(cab_arvb->noRaiz), sizeof(int), 1, arq_arvb);
     fwrite(&(cab_arvb->proxRRN), sizeof(int), 1, arq_arvb);
     fwrite(&(cab_arvb->nroNiveis), sizeof(int), 1, arq_arvb);
-    fwrite(&(cab_arvb->noRaiz), sizeof(int), 1, arq_arvb);
     fwrite(&(cab_arvb->nroChaves), sizeof(int), 1, arq_arvb);
 
     char lixo = '$';
@@ -13,8 +13,8 @@ void escreve_cab_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb) {
     }
 }
 
-void escreve_no_arvb(FILE* arq_arvb, no_t* no, int nivel) {
-    fwrite(&nivel, sizeof(int), 1, arq_arvb);
+void escreve_no_arvb(FILE* arq_arvb, no_t* no) {
+    fwrite(&(no->nivel), sizeof(int), 1, arq_arvb);
     fwrite(&(no->num_chaves), sizeof(int), 1, arq_arvb);
 
     for (int i = 0; i < ORDEM_ARVORE - 1; i++) {
@@ -30,4 +30,9 @@ void seta_consistencia_arvb(FILE* arq_arvb, cab_arvb_t* cab_arvb, char consisten
     desloca_offset(arq_arvb, 0);
     cab_arvb->status = consistencia;
     escreve_cab_arvb(arq_arvb, cab_arvb);
+}
+
+void escreve_no_rrn(FILE* arq_arvb, no_t* no, int rrn_no) {
+    desloca_offset(arq_arvb, 1LL * TAMANHO_PAGINA_ARVB * (rrn_no + 1));
+    escreve_no_arvb(arq_arvb, no);
 }
