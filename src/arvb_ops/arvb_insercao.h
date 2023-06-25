@@ -6,6 +6,9 @@
 #include "../structs/arvoreb.h"
 #include "./arvb_busca.h"
 
+// Arquivo com função que faz inserção
+// documentado no .c
+
 int insere_crime_arvb(FILE* arq_arv_b, cab_arvb_t* cab_arvb, char* nome_campo, crime_t* crime,
                       long long int byteOffset);
 

@@ -275,14 +275,23 @@ void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, 
 /**
  *
  * FUNCIONALIDADE 8
+ * Cria arquivo de índices de árbore B*
+ *
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo em que será baseado esse índice
+ * @param tipo_campo (string ou int) associado
+ * @param nome_arq_arvb nome do arquivo de índices de árvore B* a ser escrito
  *
  */
 void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_arvb) {
+
+    // foi dito que sempre será int! por isso dá erro se for string
     if (tipo_campo[0] == 's') {
         erro();
         return;
     }
 
+    // abre arquivos e aloca cabeçalho
     FILE* arq_bin;
     FILE* arq_arvb;
     cabecalho_t* cab_arq_bin;
@@ -292,6 +301,7 @@ void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         return;
     }
 
+    // cria e escreve o cabeçalho inconsistence no arquivo de índices
     cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb));
     if (cab_arvb == NULL) {
         libera_memo(1, cab_arq_bin);
@@ -304,8 +314,10 @@ void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     cab_arvb->noRaiz = -1;
     cab_arvb->nroNiveis = 0;
     cab_arvb->proxRRN = 0;
+
     escreve_cab_arvb(arq_arvb, cab_arvb);
 
+    // Vai lendo crime por crime e inserindo ele
     crime_t* crime_atual = NULL;
     long long int byteoffset_atual = TAMANHO_CABECALHO;
 
@@ -318,6 +330,7 @@ void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
             return;
         }
 
+        // se não for logicamente removido, insere na árvore B*
         if (crime_atual->removido != '1') {
             insere_crime_arvb(arq_arvb, cab_arvb, nome_campo, crime_atual, byteoffset_atual);
         }
@@ -326,6 +339,7 @@ void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
         libera_crime(crime_atual);
     }
 
+    // marca como consistente novamente (e atualiza cabeçalho)
     seta_consistencia_arvb(arq_arvb, cab_arvb, '1');
 
     libera_memo(2, cab_arq_bin, cab_arvb);
@@ -337,15 +351,22 @@ void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 /**
  * FUNCIONALIDADE 9
  * Procura registros em arquivo de índices árvore b
+ *
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo em que será baseado esse índice
+ * @param tipo_campo (string ou int) associado
+ * @param nome_arq_arvb nome do arquivo de índices de árvore B* a ser escrito
+ * @param num_consultas número de queries a serem feitas
  */
 void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
                             char* nome_arq_arvb, int num_consultas) {
 
-    if (tipo_campo[0] == 's') {
+    if (tipo_campo[0] == 's') { // não lida com chaves strings
         erro();
         return;
     }
 
+    // abre arquivos e lê cabeçalhos
     FILE* arq_bin;
     FILE* arq_arvb;
     cabecalho_t* cab_arq_bin;
@@ -356,10 +377,13 @@ void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_cam
         return;
     }
 
+    // número de campos envolvidos em cada query
     int num_campos = -1;
     campo_busca_t** campos = NULL;
+
     for (int i = 0; i < num_consultas; i++) {
         scanf("%d", &num_campos);
+
         campos = le_campos_busca(num_campos);
         if (campos == NULL) {
             fecha_arquivos(2, arq_bin, arq_arvb);
@@ -369,6 +393,7 @@ void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_cam
         }
 
         if (i != 0) {
+            // para cada nova consulta, reseta os offsets
             desloca_offset(arq_bin, TAMANHO_CABECALHO);
             desloca_offset(arq_arvb, TAMANHO_PAGINA_ARVB);
         }
@@ -393,15 +418,23 @@ void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_cam
 /**
  * FUNCIONALIDADE 10
  * insere registro na arvore B
+ *
+ * @param nome_arq_bin nome do arquivo binário de registros criminais
+ * @param nome_campo nome do campo em que será baseado esse índice
+ * @param tipo_campo (string ou int) associado
+ * @param nome_arq_arvb nome do arquivo de índices de árvore B* a ser escrito
+ * @param num_consultas número de inserções a serem feitas
+ *
  */
 void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
                            char* nome_arq_arvb, int num_consultas) {
 
-    if (tipo_campo[0] == 's') {
+    if (tipo_campo[0] == 's') { // não lida com o caso em que chaves são strings
         erro();
         return;
     }
 
+    // abre arquivos e lê cabeçalhos
     FILE* arq_bin;
     FILE* arq_arvb;
     cabecalho_t* cab_arq_bin;
@@ -412,10 +445,13 @@ void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_camp
         return;
     }
 
+    // enquanto insiro, seta inicialmente como inconsistente
     seta_consistencia_arvb(arq_arvb, cab_arvb, '0');
     seta_consistencia_bin(arq_bin, cab_arq_bin, '0');
 
-    desloca_offset(arq_bin, cab_arq_bin->proxByteOffset); // insere no final entao ja desloca
+    // sempre insiro no final do arquivo binário
+    desloca_offset(arq_bin, cab_arq_bin->proxByteOffset);
+
     crime_t* crime_atual = NULL;
     for (int i = 0; i < num_consultas; i++) {
         crime_atual = le_crime_tela();
@@ -426,8 +462,10 @@ void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_camp
             return;
         }
 
+        // insere crime na arvore B*
         insere_crime_arvb(arq_arvb, cab_arvb, nome_campo, crime_atual, cab_arq_bin->proxByteOffset);
 
+        // insere no arquivo de registros
         escreve_registro_criminal(arq_bin, crime_atual);
         cab_arq_bin->nroRegArq++;
         cab_arq_bin->proxByteOffset += crime_atual->tamanho_real;
@@ -437,6 +475,7 @@ void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_camp
 
     seta_consistencia_arvb(arq_arvb, cab_arvb, '1');
     seta_consistencia_bin(arq_bin, cab_arq_bin, '1');
+
     fecha_arquivos(2, arq_arvb, arq_bin);
     libera_memo(2, cab_arq_bin, cab_arvb);
 

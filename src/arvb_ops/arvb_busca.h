@@ -5,6 +5,9 @@
 #include "../io/io_crimes.h"
 #include "../structs/arvoreb.h"
 
+// Funções relacionadas a operações de busca na árvore B*
+// comentadas no .c
+
 int busca_chave(FILE* arq_arv, cab_arvb_t* cab_arvb, dados_int_t* chave_procurada, no_t** no,
                 int* pos_chave, int* flag_presente);
 

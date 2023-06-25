@@ -138,13 +138,19 @@ void libera_memo_consultas(int flag_erro, FILE* arq_bin, cabecalho_t* cabecalho,
 }
 
 /**
- * TODO
+ * Função que fecha um número qualquer de arquivos fornecidos como parâmetro
+ *
+ * @param num_arqs número de arquivos a serem fechados
+ * @param arquivos_separados_por_virgula varios ponteiros de arquivos separados por vírgula a serem
+ * fechados
  */
 void fecha_arquivos(int num_arqs, ...) {
     va_list argumentos;
     va_start(argumentos, num_arqs);
+
     FILE* arq_atual = NULL;
     for (int i = 0; i < num_arqs; i++) {
+        // vai fechando arquivo por arquivo
         arq_atual = va_arg(argumentos, FILE*);
         if (arq_atual != NULL) fclose(arq_atual);
     }
@@ -152,20 +158,28 @@ void fecha_arquivos(int num_arqs, ...) {
 }
 
 /**
- * TODO
+ * Função que dá free em um número qualquer de ponteiros
+ *
+ * @param num_ponts número de ponteiros a dar free
+ * @param ponteiros_separados_por_virgula varios ponteiros para dar free
  */
 void libera_memo(int num_ponts, ...) {
     va_list argumentos;
     va_start(argumentos, num_ponts);
+
     void* pont_atual = NULL;
     for (int i = 0; i < num_ponts; i++) {
+        // vai dando free em ponteiro por ponteiro
         pont_atual = va_arg(argumentos, void*);
         if (pont_atual != NULL) free(pont_atual);
     }
 }
 
 /**
- * TODO
+ * Função que libera um array de tamanho especificado que alocou memoria em cada indice
+ *
+ * @param arr ponteiro para essa array
+ * @param tamanho tamanho dela
  */
 void libera_arr(void** arr, int tamanho) {
     for (int i = 0; i < tamanho; i++)
@@ -232,6 +246,20 @@ int abre_arq_bin_ind(FILE** arq_bin, char* nome_arq_bin, FILE** arq_idx, char* n
     return 1;
 }
 
+/**
+ *
+ * Abre arquivo binários de registros criminais, e de índice árvore B* e le cabeçalhos
+ * lida com erros.
+ *
+ * @param arq_bin
+ * @param nome_arq_bin
+ * @param arq_arv
+ * @param nome_arq_arv
+ * @param cab_arq_bin
+ * @param cab_arvb
+ * @return 0 se ocorreu algum erro, 1 se deu tudo certo
+ *
+ */
 int abre_arq_bin_arv(FILE** arq_bin, char* nome_arq_bin, FILE** arq_arv, char* nome_arq_arv,
                      cabecalho_t** cab_arq_bin, cab_arvb_t** cab_arvb) {
     *arq_bin = fopen(nome_arq_bin, "rb+");
@@ -245,6 +273,8 @@ int abre_arq_bin_arv(FILE** arq_bin, char* nome_arq_bin, FILE** arq_arv, char* n
         return 0;
     }
 
+    // se o cabeçalho a ser lido foi passado como NULL, indico que nesse caso
+    // abre no modo wb+ para criar arquivo de índice caso nao tenha sido criado
     if (cab_arvb == NULL)
         *arq_arv = fopen(nome_arq_arv, "wb+");
     else

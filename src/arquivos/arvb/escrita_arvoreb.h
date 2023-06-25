@@ -1,6 +1,8 @@
 #ifndef ESCRITA_ARVOREB_H
 #define ESCRITA_ARVOREB_H
 
+// comentado no .c
+
 #include "../../structs/arvoreb.h"
 #include "../indice/escrita_bin_ind.h"
 #include <stdio.h>

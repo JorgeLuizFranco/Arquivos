@@ -55,14 +55,20 @@ void insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
 void atualiza_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_idx,
                         int num_consultas);
 
-// Funcionalidade 8
+// Funcionalidade 8. A partir de um nome de arquivo binário de registros, nome de campo e tipo desse
+// campo e do nome do arquivo de índice de árvore B*, cria o arquivo de índice de árvore B* com o
+// nome especificado
 void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, char* nome_arq_arvb);
 
-// Funcionalidade 9
+// Funcionalidade 9. A partir de um nome de arquivo binário de registros, nome de campo e tipo desse
+// campo, do nome do arquivo de índice de árvore B* e do número de queries,  faz essas queries em
+// busca de crimes que satisfaçam elas. É possível que o arquivo de índice facilite essa busca
 void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
                             char* nome_arq_arvb, int num_consultas);
 
-// Funcionalidade 10
+// Funcionalidade 10. A partir de um nome de arquivo binário de registros, nome de campo e tipo
+// desse campo, do nome do arquivo de índice de árvore B* e do número de inserções, lê da entrada
+// padrão o número especificado de registros criminais e vai inserindo
 void arvb_insere_registros(char* nome_arq_bin, char* nome_campo, char* tipo_campo,
                            char* nome_arq_arvb, int num_consultas);
 
