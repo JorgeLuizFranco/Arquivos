@@ -58,6 +58,14 @@ no_t* le_no_arvb(FILE* arq_arvb) {
 }
 
 /**
+ * Retorna byteoffset de um nó que corresponde a um rrn
+ *
+ * @param rrn_no
+ * @return byteoffset
+ */
+long long int byteoffset_no(int rrn_no) { return 1LL * TAMANHO_PAGINA_ARVB * (rrn_no + 1); }
+
+/**
  * Lê nó em um dado rrn
  *
  * @param arq_arvb ponteiro para arquivo de árvore B*
@@ -65,6 +73,6 @@ no_t* le_no_arvb(FILE* arq_arvb) {
  * @return nó lido e alocado. NULL se não tiver espaço
  */
 no_t* pega_no_rrn(FILE* arq_arvb, int rrn_no) {
-    desloca_offset(arq_arvb, 1LL * TAMANHO_PAGINA_ARVB * (rrn_no + 1));
+    desloca_offset(arq_arvb, byteoffset_no(rrn_no));
     return le_no_arvb(arq_arvb);
 }
