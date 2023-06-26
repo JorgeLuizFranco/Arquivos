@@ -98,6 +98,8 @@ int busca_arvb(FILE* arq_bin, FILE* arq_arv, cab_arvb_t* cab_arvb, cabecalho_t* 
     // se = -1, a query não usa esse campo, então faço uma busca linear
     if (pos_campo == -1) {
         // Busca linear
+        desloca_offset(arq_bin, TAMANHO_CABECALHO);
+
         long long int offset_atual = TAMANHO_CABECALHO; // offset do próximo registro criminal
         crime_t* crime_atual = NULL;
 

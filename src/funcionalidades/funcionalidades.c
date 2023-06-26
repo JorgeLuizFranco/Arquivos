@@ -392,12 +392,6 @@ void arvb_procura_registros(char* nome_arq_bin, char* nome_campo, char* tipo_cam
             return;
         }
 
-        if (i != 0) {
-            // para cada nova consulta, reseta os offsets
-            desloca_offset(arq_bin, TAMANHO_CABECALHO);
-            desloca_offset(arq_arvb, TAMANHO_PAGINA_ARVB);
-        }
-
         printf("Resposta para a busca %d\n", i + 1);
 
         if (busca_arvb(arq_bin, arq_arvb, cab_arvb, cab_arq_bin, campos, num_campos, nome_campo) ==
