@@ -9,7 +9,7 @@
  *
  */
 cab_arvb_t* le_cab_arvb(FILE* arq_arvb) {
-    cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb));
+    cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb_t));
     if (cab_arvb == NULL) return NULL;
 
     fread(&(cab_arvb->status), sizeof(char), 1, arq_arvb);

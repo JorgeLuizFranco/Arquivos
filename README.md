@@ -1,9 +1,31 @@
-# Trabalho da disciplina SCC0215 - Organização de Arquivos
+# Trabalho 3 da disciplina SCC0215 - Organização de Arquivos
+
+EM NOSSO TRABALHO 3, REFIZEMOS O TRABALHO 2.
 
 ## Dupla:
 
 - Arthur Queiroz Moura (NUSP 13671532) - 100%
 - Jorge Luiz Franco (NUSP 13695091) - 100%
+
+## MUDANÇAS DO 2 PARA O 3
+
+O feedback do trabalho 2 não foi entregue ainda e, por isso, o que pôde ser feito
+foi ficar se baseando na nota do runcodes.
+
+Havíamos falhado no caso de teste 12. Isso ocorreu por conta de uma parte do código
+que trabalhou incorretamente com ponteiros, o que causou um double free.
+
+Para corrigir isso, na linha 70 do arvb_busca.c setamos como NULL logo depois de dar o
+primeiro free, de modo que a funcao de liberar agora ve que e NULL e nao ocasiona mais o erro.
+
+Por conta disso, achamos melhor ver se havia outros erros similares. Assim, por meio do valgrind,
+achamos outros erros de memória e corrigimos cada um:
+
+- Em arquivos/arvb/leitura_arvb.c, na hora de ler o cabeçalho, alocamos ele com tamanho errado
+- Em arvb_ops/arvb_busca.c, ocorreu esse primeiro erro que já mencionamos.
+- Em arvb_ops/arvb_insercao.c, alocamos o nó para a próxima chamada recursiva, mas em alguns casos ele não foi desalocado
+- Em funcionalidades.c, alocamos o cabeçalho com sizeof errado.
+
 
 ## Como organizamos os .c e os .h?
 

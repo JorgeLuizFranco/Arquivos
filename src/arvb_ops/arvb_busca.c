@@ -67,6 +67,7 @@ int busca_chave(FILE* arq_arv, cab_arvb_t* cab_arvb, dados_int_t* chave_procurad
 
         // libera o que foi alocado
         libera_memo(1, *no);
+        *no = NULL;
     }
 
     // se chegou aqui, chave não está na árvore

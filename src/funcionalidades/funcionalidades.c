@@ -302,7 +302,7 @@ void arvb_cria_indice(char* nome_arq_bin, char* nome_campo, char* tipo_campo, ch
     }
 
     // cria e escreve o cabeçalho inconsistence no arquivo de índices
-    cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb));
+    cab_arvb_t* cab_arvb = (cab_arvb_t*)malloc(sizeof(cab_arvb_t));
     if (cab_arvb == NULL) {
         libera_memo(1, cab_arq_bin);
         fecha_arquivos(2, arq_bin, arq_arvb);

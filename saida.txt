@@ -1,3 +1,15 @@
-./programa
-40211.090000
-23145.720000
+==3828== Memcheck, a memory error detector
+==3828== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==3828== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==3828== Command: ./programa
+==3828== 
+Falha no processamento do arquivo.
+==3828== 
+==3828== HEAP SUMMARY:
+==3828==     in use at exit: 0 bytes in 0 blocks
+==3828==   total heap usage: 8 allocs, 8 frees, 17,372 bytes allocated
+==3828== 
+==3828== All heap blocks were freed -- no leaks are possible
+==3828== 
+==3828== For lists of detected and suppressed errors, rerun with: -s
+==3828== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)

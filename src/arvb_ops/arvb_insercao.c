@@ -473,9 +473,11 @@ int insere_chave_arvb(FILE* arq_arv, cab_arvb_t* cab_arvb, dados_int_t* chave, n
                     return 0;
             }
             // e se nao for, retorna 2 informando que esta sobrecarregado
+            libera_memo(1, prox_no);
             return 2;
         }
 
+        libera_memo(1, prox_no);
         // se não tiver enchido, ok!
         return 1;
     }

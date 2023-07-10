@@ -1,5 +1,5 @@
 CXX=gcc
-CXXFLAGS=-Wall -Wextra
+CXXFLAGS=-Wall -Wextra -Werror -g
 EXEC=programa
 
 SRC_FOLDER=src
@@ -24,10 +24,13 @@ clean:
 	clear
 
 run:
-	./programa
+	./${EXEC}
+
+valgrind:
+	valgrind --leak-check=full ./${EXEC} < entrada.in > saida.txt 2>&1
 
 zip:
-	zip -r trabalho2_arquivos.zip Makefile README.md src/
+	zip -r trabalho3_remake2_arquivos.zip Makefile README.md src/
 
 restore:
 	rm -rf ./binarios/*
